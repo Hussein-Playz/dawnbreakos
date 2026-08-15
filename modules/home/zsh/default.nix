@@ -66,7 +66,7 @@
       c = "clear";
       fr = "nh os switch --hostname ${profile}";
       fu = "nh os switch --hostname ${profile} --update";
-      zu = "sh <(curl -L https://gitlab.com/Zaney/dawnbreakos/-/releases/latest/download/install-dawnbreakos.sh)";
+      zu = "sh <(curl -L https://raw.githubusercontent.com/Hussein-Playz/dawnbreakos/main/install-dawnbreakos.sh)";
       ncg = "nix-collect-garbage --delete-old && sudo nix-collect-garbage -d && sudo /run/current-system/bin/switch-to-configuration boot";
       cat = "bat";
       man = "batman";
