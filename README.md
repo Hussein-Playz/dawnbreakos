@@ -9,6 +9,10 @@ I originally installed [ZaneyOS](https://gitlab.com/Zaney/zaneyos) for my nix co
 
 And in the keybinds menu (`SUPER + /` in hyprland) you may see Dawnbreak Launcher, it's my private minecraft launcher so you may remove it (./modules/home/hyprland/binds.nix is where keybinds are located) or you can replace it with any launcher you want by modifying the line containing it in binds.nix
 
+And some keybinds may not function due to me removing the original Quickshell, waybar, and noctalia configurations 
+
+And to allow drivers to work (FOR HYBRID SUPPORT) you must go into hosts/your-host/variables.nix and modify the IDs correctly, to figure out how go to FAQ.md and ctrl + F and search for `In the ~/dawnbreakos/hosts/HYBRID-HOST/variables.nix file you will need to set` to find the steps
+
 Lastly, I had AI assist me in some parts of this configuration though I lowkey forgot where, however I did read and test the parts I had written via AI
 
 #### 🍖 Requirements
@@ -102,7 +106,6 @@ Below are the keybindings for Hyprland, formatted for easy reference.
 * `SUPER + Shift + S` → Region screenshot
 * `SUPER + Alt + C` → Color Picker
 * `SUPER + Shift + T` → Toggle Dropdown Terminal
-* `SUPER + Ctrl + C` → Open Cheatsheets Viewer
 
 </td>
 <td width="50%">

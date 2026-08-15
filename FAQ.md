@@ -1,7 +1,5 @@
 # 💬 DawnbreakOS FAQ
 
-- **Date:** 14-Decemnber-2025
-
 **⌨ Where can I see the Hyprland keybindings?**
 
 - The SUPER key + / opens a menu with the bindings
