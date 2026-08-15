@@ -1,1 +1,7 @@
 ./hosts/Dawnbreak-Laptop
+*~
+result
+result-*
+.env
+.env.*
+!.env.example
