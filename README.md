@@ -62,9 +62,7 @@ Lastly, I had AI assist me in some parts of this configuration though I lowkey f
   
 # Hyprland Keybindings
 
-Below are the keybindings for Hyprland, formatted for easy reference. The right
-column shows keybindings that are specific to **Noctalia Shell** (only available
-when `barChoice = "noctalia"`).
+Below are the keybindings for Hyprland, formatted for easy reference.
 
 <table>
 <tr>
