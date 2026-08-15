@@ -7,7 +7,7 @@ This includes the wallpaper, scripts, applications, config files, and more.
 
 I originally installed [ZaneyOS](https://gitlab.com/Zaney/zaneyos) for my nix configurations then I spent some time modifying it and replacing alot of things (including the removal of Waybar and replacing it with Quickshell, who's configurations i obtained from [end-4's Quickshell Configurations](https://github.com/end-4/dots-hyprland))
 
-And in the keybinds you may see Dawnbreak Launcher, it's my private minecraft launcher so you may remove it (./modules/home/hyprland/binds.nix is where keybinds are located) or you can replace it with any launcher you want by modifying the line containing it in binds.nix
+And in the keybinds menu (`SUPER + /` in hyprland) you may see Dawnbreak Launcher, it's my private minecraft launcher so you may remove it (./modules/home/hyprland/binds.nix is where keybinds are located) or you can replace it with any launcher you want by modifying the line containing it in binds.nix
 
 Lastly, I had AI assist me in some parts of this configuration though I lowkey forgot where, however I did read and test the parts I had written via AI
 
@@ -42,14 +42,6 @@ Lastly, I had AI assist me in some parts of this configuration though I lowkey f
   file.
 - Easy to understand file structure and simple, but encompassing, configuration.
 
-#### 👼 An Incredible Community Focused On Support
-
-- The entire idea of DawnbreakOS is to make NixOS an approachable space.
-- NixOS is actually a great community that you will want to be a part of.
-- Many people who are patient and happy to spend their free time helping you are
-  running DawnbreakOS.
-- Feel free to reach out on the Discord for any help with anything.
-
 #### 📦 How To Install Packages?
 
 - You can search the [Nix Packages](https://search.nixos.org/packages?) &
@@ -79,7 +71,7 @@ Below are the keybindings for Hyprland, formatted for easy reference.
 
 ### Quickshell
 
-* 'SUPER + /' → Keybinds Menu
+* `SUPER + /` → Keybinds Menu
 * `SUPER + D` → Toggle Quickshell Search
 * `SUPER + Ctrl + D` → Toggle Dock
 * `SUPER + Tab` → Toggle Quickshell Overview
@@ -93,7 +85,6 @@ Below are the keybindings for Hyprland, formatted for easy reference.
 * `SUPER + B` → Toggle Left Sidebar
 * `SUPER + O` → Toggle Left Sidebar
 * `SUPER + N` → Toggle Right Sidebar
-* `SUPER + /` → Toggle Cheatsheet
 * `SUPER + M` → Toggle Media Controls
 * `SUPER + G` → Toggle Quickshell Overlay
 * `Ctrl + Alt + Delete` → Open Session Menu
@@ -205,7 +196,7 @@ nix-shell -p git curl pciutils
 Then:
 
 ```
-sh <(curl -L https://github.com/Hussein-Playz/dawnbreakos/-/raw/main/install-dawnbreakos.sh)
+sh <(curl -L https://raw.githubusercontent.com/Hussein-Playz/dawnbreakos/main/install-dawnbreakos.sh)
 ```
 
 </details>
