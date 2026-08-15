@@ -13,11 +13,8 @@
       #export VISUAL="nvim"
 
       #alias c="clear"
-      alias dawn-hosts="cd ~/dawnbreakos/hosts/Dawnbreak-Laptop"
-      alias dawn-module="cd ~/dawnbreakos/modules/home"
       alias prime-run='__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "$@"'
       alias ls="ls"
-      alias atlauncher="$HOME/Desktop/Dawnbreak\ Launcher/atlauncher"
       alias workf="kate ~/dawnbreakos"
       alias fastfetch="clear && fastfetch"
       if [ -e /run/current-system/etc/set-environment ]; then
