@@ -1,0 +1,84 @@
+{host, ...}: let
+  vars = import ../../../hosts/${host}/variables.nix;
+  inherit
+    (vars)
+    barChoice
+    stylixImage
+    ;
+  # Noctalia-specific startup commands
+#   noctaliaExec =
+#     if barChoice == "noctalia"
+#     then [
+#       "start.noctalia"
+#     ]
+#     else [];
+#   # Waybar-specific startup commands
+#   waybarExec =
+#     if barChoice != "noctalia"
+#     then [
+#       "killall -q awww;sleep .5 && awww-daemon"
+#       "killall -q waybar;sleep .5 && waybar"
+#       "killall -q nc;sleep .5 && swaync"
+#       "nm-applet --indicator"
+#       # Delayed-only restore so Stylix finishes first, then user's wallpaper wins with a single change
+#       "sh -lc 'sleep 2 && (qs-wallpapers-restore || waypaper --wallpaper ${stylixImage} --backend awww) >/dev/null 2>&1 || true'"
+#     ]
+#     else [];
+in {
+  wayland.windowManager.hyprland = {
+    extraConfig = ''
+        hl.on("hyprland.start", function()
+             hl.exec_cmd("wl-paste --type text --watch bash -c 'cliphist store && qs -c ii ipc call cliphistService update'")
+             hl.exec_cmd("wl-paste --type image --watch bash -c 'cliphist store && qs -c ii ipc call cliphistService update'")
+             hl.exec_cmd("dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+             hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+             hl.exec_cmd("systemctl --user start hyprpolkitagent")
+             hl.exec_cmd("qs -c ii")
+             hl.exec_cmd("hyprland-change-layout init")
+             hl.exec_cmd("discord")
+        end)
+    '';
+  };
+#     configType = "lua";
+#    on = {
+#      _args = [
+#         "hyprland.start"
+#         (pkgs.lib.generators.mkLuaInLine ''
+#           function()
+#             hl.exec_cmd("wl-paste --type text --watch bash -c 'cliphist store && qs -c ii ipc call cliphistService update'")
+#             hl.exec_cmd("wl-paste --type image --watch bash -c 'cliphist store && qs -c ii ipc call cliphistService update'")
+#             hl.exec_cmd("dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+#             hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+#             hl.exec_cmd("systemctl --user start hyprpolkitagent")
+#             hl.exec_cmd("qs -c ii")
+#             hl.exec_cmd("hyprland-change-layout init")
+#             hl.exec_cmd("discord")
+##          end
+#       '')
+#     ];
+#   };
+# };
+   # exec-once = [
+#      "wl-paste --type text --watch bash -c 'cliphist store && qs -c ii ipc call cliphistService update'"
+ #     "wl-paste --type image --watch bash -c 'cliphist store && qs -c ii ipc call cliphistService update'"
+
+  #    "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+   #   "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+
+    #  "systemctl --user start hyprpolkitagent"
+
+#      "gnome-keyring-daemon --start --components=secrets"
+
+#      "hypridle"
+
+#      "qs -c ii"
+
+ #     "hyprland-change-layout init"
+
+  #    "discord"
+   # ];
+#      ++waybarExec
+#      ++ noctaliaExec ++ waybarExec;
+#  };
+#};
+}
