@@ -46,7 +46,7 @@
     ...
   } @ inputs: let
     system = "x86_64-linux";
-    host = "Dawnbreak-Laptop";
+    host = "dawnbreakos-oem";
     profile = "nvidia-laptop";
     username = "dawn";
 
