@@ -2,9 +2,8 @@
 
   environment.systemPackages = with pkgs; [
     qbittorrent
-    jdk17 
     vscode
-    steam
+    #steam
     kdePackages.kate
     #kdePackages.dolphin
     cava
@@ -82,7 +81,6 @@
         withVencord = true;
     })
     kdePackages.konsole
-    atlauncher
     kdePackages.kirigami
     upscayl
     qimgv
@@ -90,7 +88,6 @@
     lutris
     protontricks
     kdePackages.ark
-    qemu
     kdePackages.kde-cli-tools
     (runCommand "kde-applications-menu" {} ''
       mkdir -p $out/etc/xdg/menus
@@ -99,9 +96,7 @@
     '')
     lxappearance
     gnome-system-monitor
-    figma-linux
-    unityhub
-    anydesk
+#     inputs.millennium.packages."${pkgs.system}".millennium-steam
   ];
   # Add host specific flatpaks here
   services = {

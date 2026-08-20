@@ -10,6 +10,7 @@
     nvf.url = "github:notashelf/nvf";
     stylix.url = "github:danth/stylix/master";
     nix-flatpak.url = "github:gmodena/nix-flatpak?ref=latest";
+    millennium.url = "github:SteamClientHomebrew/Millennium?dir=packages/nix";
 
     noctalia = {
       url = "github:noctalia-dev/noctalia";

@@ -62,8 +62,8 @@ in {
       eza # Beautiful ls Replacement
       ffmpeg # Terminal Video / Audio Editing
       fd # find util needed for emacs but good util regardless vs. find
-      gearlever # Manage / run Appimages
-      icu # dep for gearlever
+      #gearlever # Manage / run Appimages
+      #icu # dep for gearlever
       gimp # Great Photo Editor
       gnumake # Needed for emacs
       gpu-screen-recorder # needed for noctalia-shell

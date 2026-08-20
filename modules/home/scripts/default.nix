@@ -13,10 +13,8 @@
     (import ./note.nix {inherit pkgs;})
     (import ./note-from-clipboard.nix {inherit pkgs;})
     (import ./nvidia-offload.nix {inherit pkgs;})
-    (import ./rofi-launcher.nix {inherit pkgs;})
     (import ./screenshootin.nix {inherit pkgs;})
     (import ./squirtle.nix {inherit pkgs;})
-    (import ./task-waybar.nix {inherit pkgs;})
     (import ./DropTerminal.nix {inherit pkgs;})
     (import ./wallsetter.nix {
       inherit pkgs;
@@ -41,8 +39,6 @@
     (import ./hyprland-change-layout.nix {inherit pkgs;})
     (import ./launch-nwg-menu.nix {inherit pkgs;})
     (import ./hyprland-dock.nix {inherit pkgs;})
-    (import ./restart.noctalia.nix {inherit pkgs;})
-    (import ./start.noctalia.nix {inherit pkgs;})
     (import ./ncli.nix {
       inherit pkgs profile;
       backupFiles = [

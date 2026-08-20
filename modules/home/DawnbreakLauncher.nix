@@ -4,7 +4,7 @@
     home.file.".local/share/applications/DawnbreakLauncher.desktop".text = ''
         [Desktop Entry]
         Categories=Game;
-        Exec="/home/dawn/Desktop/Dawnbreak Launcher/atlauncher"
+        Exec="$HOME/.local/share/ATLauncher/atlauncher"
         Icon=atlauncher
         Keywords=game;Minecraft;
         MimeType=

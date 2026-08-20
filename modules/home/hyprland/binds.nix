@@ -143,9 +143,9 @@ in {
         hl.dsp.exec_cmd("\"/home/dawn/Desktop/Dawnbreak Launcher/atlauncher\""),
         { description = "Apps: Dawnbreak Launcher" })
 
-      hl.bind(modifier .. " + T",
-        hl.dsp.exec_cmd("thunar"),
-        { description = "Apps: Thunar" })
+      hl.bind("CTRL + SHIFT + escape",
+        hl.dsp.exec_cmd("gnome-system-monitor"),
+        { description = "System: GNOME System Monitor" })
 
       hl.bind(modifier .. " + ALT + M",
         hl.dsp.exec_cmd("pavucontrol"),
@@ -192,6 +192,10 @@ in {
       hl.bind(modifier .. " + Q",
         hl.dsp.window.close(),
         { description = "Window: Kill Active Window" })
+
+      hl.bind(modifier .. " + SHIFT + Q",
+        hl.dsp.exec_cmd("hyprctl kill"),
+        { description = "Window: Force Kill Active Window" })
 
       hl.bind(modifier .. " + P",
         hl.dsp.window.pseudo(),

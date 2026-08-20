@@ -4,7 +4,7 @@
     qbittorrent
     jdk17 
     vscode
-    steam
+    #steam
     kdePackages.kate
     #kdePackages.dolphin
     cava
@@ -101,7 +101,7 @@
     gnome-system-monitor
     figma-linux
     unityhub
-    anydesk
+#     inputs.millennium.packages."${pkgs.system}".millennium-steam
   ];
   # Add host specific flatpaks here
   services = {
