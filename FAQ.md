@@ -135,29 +135,6 @@ ncli doom status                  # Check installation status
 
 <details>
 
-<summary>**❄ Why did you create DawnbreakOS ? **</summary>
-
-<div style="margin-left: 20px;">
-
-- In the beginning, it was simply my configuration saved on a GIT repository.
-- It was there to promote NixOS and Hyprland.
-- Providing a stable, working configuration.
-- It has never been intended as a full NixOS distro.
-- The `DawnbreakOS` name is an inside joke among friends.
-- The intent is this configration can be used as a daily driver
-- Develop software, play games via steam, etc.
-- My hope is that it helpful, and will modify it to fit your needs.
-- That is the key take away. Make it your own.
-- You create a fork of DawnbreakOS, then modify it.
-- If you find an issue and fix it, or provide a new feature, please share it.
-- DawnbreakOS is not a distro. At this time there are no plans to create an install
-  ISO.
-
-</div>
-</details>
-
-<details>
-
 <div style="margin-left: 20px;">
 
 <details>
@@ -523,86 +500,6 @@ make the change effective.
 </details>
 
 <details>
-<summary>**🎨 Stylix**</summary>
-
-<div style="margin-left: 20px;">
-
-<details>
-<summary>How do I enable or disable Stylix? </summary>
-
-- To Enable:
-
-1. Edit the `~/dawnbreakos/modules/core/stylix.nix` file.
-2. Comment out from `base16Scheme` to the `};` after `base0F`
-
-```nix
-# Styling Options
-  stylix = {
-    enable = true;
-    image = ../../wallpapers/Anime-girl-sitting-night-sky_1952x1120.jpg;
-    #image = ../../wallpapers/Rainnight.jpg;
-    #image = ../../wallpapers/zaney-wallpaper.jpg;
-    #  base16Scheme = {
-    #  base00 = "282936";
-    #  base01 = "3a3c4e";
-    #  base02 = "4d4f68";
-    #  base03 = "626483";
-    #  base04 = "62d6e8";
-    #  base05 = "e9e9f4";
-    #  base06 = "f1f2f8";
-    #  base07 = "f7f7fb";
-    #  base08 = "ea51b2";
-    #  base09 = "b45bcf";
-    #  base0A = "00f769";
-    #  base0B = "ebff87";
-    #  base0C = "a1efe4";
-    #  base0D = "62d6e8";
-    #  base0E = "b45bcf";
-    #  base0F = "00f769";
-    #};
-    polarity = "dark";
-    opacity.terminal = 1.0;
-    cursor = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
-      size = 24;
-    };
-```
-
-3. Select the image you want `stylix` to use for the colorpalette.
-4. Run `ncli rebuild` command or `fr` alias to create a new generation with this
-   colorscheme.
-
-- To disable uncomment
-
-1. Edit the `~/dawnbreakos/modules/core/stylix.nix` file.
-2. Uncomment out from `base16Scheme` to the `};` after `base0F`
-
-```nix
- base16Scheme = {
-  base00 = "282936";
-  base01 = "3a3c4e";
-  base02 = "4d4f68";
-  base03 = "626483";
-  base04 = "62d6e8";
-  base05 = "e9e9f4";
-  base06 = "f1f2f8";
-  base07 = "f7f7fb";
-  base08 = "ea51b2";
-  base09 = "b45bcf";
-  base0A = "00f769";
-  base0B = "ebff87";
-  base0C = "a1efe4";
-  base0D = "62d6e8";
-  base0E = "b45bcf";
-  base0F = "00f769";
-};
-```
-
-3. Run the `ncli rebuild` command or `fr` alias to build a new generation with
-   either the default dracula or set your own custom colors
-
-</details>
 
 <details>
  <summary>How do I change the image Stylix uses to theme with?</summary>
@@ -641,47 +538,7 @@ stylixImage = ../../wallpapers/AnimeGirlNightSky.jpg;
 
 <summary>** How do I change the background? **</summary>
 
-- SUPER + ALT + W will select a new background
-
-</details>
-
-<details>
-
-<summary>**  How can I set a timer to change the wallpaper automatically?  **</summary>
-
-1. Edit the `~/dawnbreakos/modules/home/hyprland/config.nix` file.
-2. Comment out the line `sleep 1.5 && awww img ...`
-3. Add new line after that with `sleep 1 && wallsetter`
-
-```json
-settings = {
-     exec-once = [
-       "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-       "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-       "killall -q awww;sleep .5 && awww init"
-       "killall -q waybar;sleep .5 && waybar"
-       "killall -q swaync;sleep .5 && swaync"
-       "nm-applet --indicator"
-       "lxqt-policykit-agent"
-       "pypr &"
-       #"sleep 1.5 && awww img /home/${username}/Pictures/Wallpapers/zaney-wallpaper.jpg"
-       "sleep 1 && wallsetter"
-     ];
-```
-
-4. Run the `ncli rebuild` command or `fr` alias to create a new generation.
-5. You will need to logout or reboot to make the change effective.
-
-</details>
-
-<details>
-
-<summary>**How do I change the interval the wallpaper changes?  **</summary>
-
-1. Edit the `~/dawnbreakos/modules/home/scripts/wallsetter`
-2. Change the `TIMEOUT =` value. Which is in seconds.
-3. Run the `ncli` command or`fr` alias, to create a new generation.
-4. You will need to logout or reboot to make the change effective.
+- CTRL + SUPER + T will select a new background
 
 </details>
 
@@ -695,7 +552,6 @@ settings = {
 <div style="margin-left: 20px;">
 
 <details>
-<summary> For version v2.5+ </summary>
 
 1. First backup your existing `dawnbreakos` directory. e.g.
    `cp -r ~/dawnbreakos ~/dawnbreakos-backup`
@@ -731,48 +587,11 @@ git pull
 
 </details>
 
-<details>
- <summary> For versions v2.0->2.5 </summary>
-
-1. First backup your existing `dawnbreakos` directory. e.g.
-   `cp -r ~/dawnbreakos ~/dawnbreakos-backup`
-
-2. There is no direct update. When you clone the the new config the config files
-   and layout have changed.
-
-3. You need to install dawnbreakos like a new install. `./install-dawnbreakos.sh`
-
-4. Once the build completes and you have rebooted you can review the new layout
-   and decide what if any changes you made on the earlier version can be
-   migrated to v2.3.
-
-</details>
-
-<details>
- <summary> For version v1.x </summary>
-
-1. The layout and configuration are completely different. Virtually noting from
-   1.x is applicable to v2.3.
-
-2. Backup your `dawnbreakos` directory e.g. `cp -r ~/dawnbreakos ~/dawnbreakos-backup`
-
-3. Run the `./install-dawnbreakos.sh` script and follow the new install
-   instructions.
-
-</details>
-
-<details>
-<summary> How do I know when a new version of DawnbreakOS is released? </summary>
-
-It will be announced on the Zaney [Discord](https://discord.gg/W7efsSDS) server.
-
-</details>
-
 </div>
 
 </details>
 
-<details><summary>**📂 DawnbreakOS v2.3 Layout**</summary>
+<details><summary>**📂 DawnbreakOS Layout**</summary>
 
 <div style="margin-left: 25px;">
 
@@ -782,14 +601,13 @@ It will be announced on the Zaney [Discord](https://discord.gg/W7efsSDS) server.
 ~/dawnbreakos/
     ├── hosts/                      # Folder where host configs are saved
     │   ├── default                 # Default host template
-    │   └── nixstation              # Zaney's host
-    ├── img/                        # Images for README.md
+    │   └── dawnbreakos-oem         # Dawnbreak's host
     ├── modules/                    # Core, HomeMgr, drivers config files
     │   └── drivers/                # AMD,NVIDA,Intel,VM config files
     │   └── core/                   # Services, packages, fonts, etc
     │   └── home/                   # Home Manager config files
     │    ├── fastfetch/             # Fastfetch config
-    │    ├── hyprland/              # Hyrprland configs
+    │    ├── hyprland/              # Hyprland configs
     │    ├── rofi/                  # rofi menu configs
     │    ├── scripts/               # screenshots, wallpaper, etc.
     │    ├── waybar/                # waybar configs in NIX format
@@ -803,8 +621,6 @@ It will be announced on the Zaney [Discord](https://discord.gg/W7efsSDS) server.
     │    ├── nvidia-laptop/         # NVIDIA Hybrid video config files
     │    └── vm/                    # Virtual Machine config files
     ├── wallpapers/                 # Add your wallpapers here
-    ├── CHANGELOG.md                # List of changes
-    ├── CONTRIBUTING.md             # How you can help
     ├── FAQ.md                      # Frequently Asked Questions
     ├── flake.lock                  # Saves version info on all installed packages
     ├── flake.nix                   # flake that controls DawnbreakOS config
