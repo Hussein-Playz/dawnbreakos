@@ -155,10 +155,10 @@ in {
                 vrr = 0,
             },
             render = {
-                cm_auto_hdr = 1,
+                cm_auto_hdr = 0,
                 cm_enabled = true,
                 direct_scanout = 0,
-                use_fp16 = 0
+                use_fp16 = 1
             },
             scrolling = {
                 column_width = 0.800000,
