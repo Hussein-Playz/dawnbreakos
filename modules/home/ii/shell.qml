@@ -24,7 +24,7 @@ ShellRoot {
 
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
-        Hyprsunset.load()
+        // Hyprsunset.load()
         FirstRunExperience.load()
         ConflictKiller.load()
         Cliphist.refresh()

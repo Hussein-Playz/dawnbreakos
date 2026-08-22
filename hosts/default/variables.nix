@@ -1,7 +1,7 @@
 {
   # Git Configuration ( For Pulling Software Repos )
-  gitUsername = "Hussein-Orabi";
-  gitEmail = "houseinplayz@gmail.com";
+  gitUsername = "Default";
+  gitEmail = "default@gmail.com";
 
   # Set Displau Manager
   # `tui` for Text login
@@ -23,17 +23,6 @@
   dbwl="/home/dawn/Desktop/Dawnbreak Launcher/atlauncher";
 
   # Python development tools are included by default
-
-  # Hyprland Settings
-  # Examples:
-  # extraMonitorSettings = "monitor = Virtual-1,1920x1080@60,auto,1";
-  # extraMonitorSettings = "monitor = HDMI-A-1,1920x1080@60,auto,1";
-  # You can configure multiple monitors.
-  # Inside the quotes, create a new line for each monitor.
-  extraMonitorSettings = "
-   monitor = eDP-1,2560x1600@240.00000,1920x0,1
-   monitor = HDMI-A-1,1920x1080@60.0,0x0,1
-    ";
 
   # Bar/Shell Settings
   # Choose between noctalia or waybar

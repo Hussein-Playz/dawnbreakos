@@ -158,6 +158,7 @@ in {
                 cm_auto_hdr = 1,
                 cm_enabled = true,
                 direct_scanout = 0,
+                use_fp16 = 0
             },
             scrolling = {
                 column_width = 0.800000,
