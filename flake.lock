@@ -276,27 +276,6 @@
         "type": "github"
       }
     },
-    "home-manager_2": {
-      "inputs": {
-        "nixpkgs": [
-          "zen-browser",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1786719456,
-        "narHash": "sha256-B74DLQs/VjlqyhnnX3tguWwghqJHWSJX30TKZuAljIg=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "83b7606dcf44abe3a94b86e8bb2b3355d22e8797",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
     "millennium": {
       "inputs": {
         "millennium-src": "millennium-src",
@@ -464,26 +443,6 @@
         "type": "github"
       }
     },
-    "noctalia": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1787196493,
-        "narHash": "sha256-vlpv5X3qOzoTGtJxejXkIdivgnJ3jI+3Gn1neD6y/mI=",
-        "owner": "noctalia-dev",
-        "repo": "noctalia",
-        "rev": "02286bbdcfa81dc3675c9de1d7203a466fcaf0eb",
-        "type": "github"
-      },
-      "original": {
-        "owner": "noctalia-dev",
-        "repo": "noctalia",
-        "type": "github"
-      }
-    },
     "nur": {
       "inputs": {
         "flake-parts": [
@@ -537,11 +496,9 @@
         "nix-flatpak": "nix-flatpak",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
-        "noctalia": "noctalia",
         "nvf": "nvf",
         "stylix": "stylix",
-        "synfetch": "synfetch",
-        "zen-browser": "zen-browser"
+        "synfetch": "synfetch"
       }
     },
     "rust-analyzer-src": {
@@ -708,28 +665,6 @@
       "original": {
         "owner": "tinted-theming",
         "repo": "base16-zed",
-        "type": "github"
-      }
-    },
-    "zen-browser": {
-      "inputs": {
-        "home-manager": "home-manager_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1787160391,
-        "narHash": "sha256-5dRTU55IlWABqnWiXDgtzrc3wT54nPoZwDQ91VOY4mE=",
-        "owner": "0xc000022070",
-        "repo": "zen-browser-flake",
-        "rev": "228a12a50971a115caa1c87b7de3d87b08e35275",
-        "type": "github"
-      },
-      "original": {
-        "owner": "0xc000022070",
-        "ref": "beta",
-        "repo": "zen-browser-flake",
         "type": "github"
       }
     }

@@ -11,21 +11,9 @@
     stylix.url = "github:danth/stylix/master";
     nix-flatpak.url = "github:gmodena/nix-flatpak?ref=latest";
     millennium.url = "github:SteamClientHomebrew/Millennium?dir=packages/nix";
-
-    noctalia = {
-      url = "github:noctalia-dev/noctalia";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Checking nixvim to see if it's better
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake/beta";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     synfetch = {

@@ -4,10 +4,8 @@
 
   inherit
     (vars)
-    barChoice
     browser
     terminal
-    dbwl
     ;
 
 in {

@@ -1,11 +1,11 @@
 {profile, ...}: {
   # Services to start
   services = {
-    upower.enable = true; # noctalia shell battery
+    upower.enable = true;
     libinput.enable = true; # Input Handling
     fstrim.enable = true; # SSD Optimizer
     gvfs.enable = true; # For Mounting USB & More
-     power-profiles-daemon.enable = true;
+    #power-profiles-daemon.enable = true;
     openssh = {
       enable = true; # Enable SSH
       settings = {
@@ -19,7 +19,7 @@
     tumbler.enable = true; # Image/video preview
     gnome.gnome-keyring.enable = true;
     thermald.enable = true;
-    tailscale.enable = true; # Tailscale
+    #tailscale.enable = true; # Tailscale
 
     smartd = {
       enable =

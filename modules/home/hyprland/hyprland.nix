@@ -64,8 +64,6 @@ in {
       source = ../../../wallpapers;
       recursive = true;
     };
-    ".face.icon".source = ./face.jpg;
-    ".config/face.jpg".source = ./face.jpg;
   };
   wayland.windowManager.hyprland = {
     enable = true;

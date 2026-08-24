@@ -3,14 +3,13 @@
   inherit
     (vars)
     alacrittyEnable
-    barChoice
     ghosttyEnable
     tmuxEnable
-    waybarChoice
     weztermEnable
     vscodeEnable
     helixEnable
     doomEmacsEnable
+    obsEnable
     ;
 in {
   imports =
@@ -18,24 +17,23 @@ in {
       ./amfora.nix
       ./bash.nix
       ./bashrc-personal.nix
-      ./overview.nix
+      ./ii.nix
       ./python.nix
       ./cli/bat.nix
       ./cli/btop.nix
       ./cli/bottom.nix
       ./cli/cava.nix
-      ./emoji.nix
-      ./eza.nix
-      ./fastfetch
       ./cli/fzf.nix
       ./cli/gh.nix
       ./cli/git.nix
-      ./gtk.nix
       ./cli/htop.nix
+      ./cli/lazygit.nix
+      ./emoji.nix
+      ./eza.nix
+      ./fastfetch
+      ./gtk.nix
       ./hyprland
       ./terminals/kitty.nix
-      ./cli/lazygit.nix
-      ./obs-studio.nix
       ./editors/nixvim.nix
       ./editors/nano.nix
       ./rofi
@@ -61,6 +59,11 @@ in {
       else []
     )
     ++ (
+      if vscodeEnable
+      then [./editors/vscode.nix]
+      else []
+    )
+    ++ (
       if doomEmacsEnable
       then [
         ./editors/doom-emacs-install.nix
@@ -81,6 +84,11 @@ in {
     ++ (
       if tmuxEnable
       then [./terminals/tmux.nix]
+      else []
+    )
+    ++ (
+      if obsEnable
+      then [./obs-studio.nix]
       else []
     )
     ++ (

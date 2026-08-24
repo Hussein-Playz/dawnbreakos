@@ -19,17 +19,10 @@
   helixEnable = false;
   #To install: Enable here, ncli rebuild, then run ncli doom install
   doomEmacsEnable = false;
-
-  dbwl="/home/dawn/Desktop/Dawnbreak Launcher/atlauncher";
+  # Enable OBS Studio
+  obsEnable = false;
 
   # Python development tools are included by default
-
-  # Bar/Shell Settings
-  # Choose between noctalia or waybar
-  barChoice = "waybar";
-
-  # Waybar Settings (used when barChoice = "waybar")
-  clock24h = false;
 
   # Program Options
   # Set Default Browser (google-chrome-stable for google-chrome)
@@ -41,19 +34,7 @@
   
 
   # Host-level default applications (picked up by Home Manager xdg.mimeApps)
-  # Uncomment and adjust the .desktop IDs to set per-host defaults.
-  # mimeDefaultApps = {
-  #   # PDFs
-  #   "application/pdf" = ["okular.desktop"];
-  #   "application/x-pdf" = ["okular.desktop"];
-  #   # Web browser
-  #   "x-scheme-handler/http"  = ["google-chrome.desktop"];  # or brave-browser.desktop, firefox.desktop
-  #   "x-scheme-handler/https" = ["google-chrome.desktop"];
-  #   "text/html"              = ["google-chrome.desktop"];
-  #   # Files
-  #   "inode/directory" = ["thunar.desktop"];      # file manager
-  #   "text/plain"      = ["nvim.desktop"];        # or code.desktop
-  # };
+  # adjust the .desktop IDs to set per-host defaults.
   mimeDefaultApps = {
   # File manager
 #   "inode/directory" = [ "org.kde.dolphin.desktop" ];
@@ -120,7 +101,7 @@
   "x-scheme-handler/magnet" = [ "org.qbittorrent.qBittorrent.desktop" ];
 };
   # Available Options:
-  # Kitty, ghostty, wezterm, aalacrity
+  # Kitty, ghostty, wezterm, alacritty
   # Note: kitty, wezterm, alacritty have to be enabled in `variables.nix`
   # Setting it here does not enable it. Kitty is installed by default
   terminal = "kitty"; # Set Default System Terminal
@@ -136,7 +117,7 @@
   nvidiaID = "PCI:2@0:0:0";
 
   # Enable NFS
-  enableNFS = true;
+  enableNFS = false;
 
   # Enable Printing Support
   printEnable = false;
@@ -145,39 +126,14 @@
   # Yazi is alternate File Manager
   thunarEnable = false;
 
-  # Themes, waybar and animation.
-  #  Only uncomment your selection
+  # Themes and animation.
+  # Only uncomment your selection
   # The others much be commented out.
 
   # Set Stylix Image
   # This will set your color palette
-  # Default background
   # Add new images to ~/dawnbreakos/wallpapers
-  #stylixImage = ../../wallpapers/AnimeGirlNightSky.jpg;
   stylixImage = ../../wallpapers/KonochanPaper.png;
-  # Set Waybar
-  #  Available Options:
-  #waybarChoice = ../../modules/home/waybar/waybar-curved.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-ddubs.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-ddubs-2.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-simple.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-dwm.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-dwm-2.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-nekodyke.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-jerry.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-TheBlackDon.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-tony.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-ddubsos-v1.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-mecha.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-jak-catppuccin.nix;
-  waybarChoice = ../../modules/home/waybar/waybar-jak-catppuccin-v2.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-jak-ml4w-modern.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-jak-oglo-simple.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-jwt-catppuccin.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-jwt-transparent.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-jwt-ultradark.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-pctrade-catppuccin.nix;
-  #waybarChoice = ../../modules/home/waybar/waybar-old-ddubsos.nix;
 
   # Set Animation style
   # Available options are:

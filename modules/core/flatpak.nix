@@ -15,6 +15,7 @@
         "com.github.tchx84.Flatseal" #Manage flatpak permissions - should always have this
         #"com.rtosta.zapzap"              # WhatsApp client
         #"io.github.flattool.Warehouse"   # Manage flatpaks, clean data, remove flatpaks and deps
+        "app.zen_browser.zen"
         "it.mijorus.gearlever" # Manage and support AppImages
         #"io.github.freedoom.Phase1"      #  Classic Doom FPS 1
         #"io.github.freedoom.Phase2"      #  Classic Doom FPS 2

@@ -10,12 +10,14 @@
       inter
       jetbrains-mono
       material-icons
+      material-symbols
       maple-mono.NF
       minecraftia
       nerd-fonts.im-writing
       nerd-fonts.blex-mono
       nerd-fonts.iosevka-term
       nerd-fonts.lilex
+      nerd-fonts.fira-code
       nerd-fonts.ubuntu
       nerd-fonts.jetbrains-mono
       nerd-fonts.fira-mono

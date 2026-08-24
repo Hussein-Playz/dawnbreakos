@@ -3,19 +3,14 @@
   lib,
   ...
 }: let
-  overviewSource = ./ii;
+  iiSource = ./ii;
 in {
-  # Quickshell-overview is a Qt6 QML app for Hyprland workspace overview
-  # It shows all workspaces with live window previews, drag-and-drop support
-  # Toggled via: SUPER + TAB (bound in hyprland/binds.nix)
-  # Started via exec-once in hyprland/exec-once.nix
-
-  # Seed the Quickshell overview code into ~/.config/quickshell/overview
+  # Seed the Quickshell ii code into ~/.config/quickshell/ii
   # Copy (not symlink) so QML module resolution works and users can edit files
   home.activation.seedOverviewCode = lib.hm.dag.entryAfter ["writeBoundary"] ''
     set -eu
     DEST="$HOME/.config/quickshell/ii"
-    SRC="${overviewSource}"
+    SRC="${iiSource}"
 
 
     if [ ! -d "$DEST" ]; then
