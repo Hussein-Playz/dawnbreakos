@@ -17,6 +17,7 @@
     gnome-system-monitor
     figma-linux
     unityhub
+    codex
   ];
   # Add host specific flatpaks here
   services = {
