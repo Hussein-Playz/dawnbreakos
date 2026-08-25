@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import qs\\nimport qs.services\\nimport qs.modules.common\\nimport qs.modules.common.widgets\\nimport qs.modules.common.functions\\nimport QtQuick\\nimport Quickshell\\nimport Quickshell.Wayland\\n\\nFullscreenPolkitWindow {\\n    id: root\\n    contentComponent: Component {\\n        WPolkitContent {}\\n    }\\n}\\n\""

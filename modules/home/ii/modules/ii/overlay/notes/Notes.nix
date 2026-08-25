@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Layouts\\nimport Quickshell\\nimport qs.services\\nimport qs.modules.common\\nimport qs.modules.ii.overlay\\n\\nStyledOverlayWidget {\\n    id: root\\n    title: Translation.tr(\\\"Notes\\\")\\n    showCenterButton: true\\n\\n    contentItem: NotesContent {\\n        radius: root.contentRadius\\n        isClickthrough: root.clickthrough\\n    }\\n}\\n\""

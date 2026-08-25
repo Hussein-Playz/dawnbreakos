@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\n\\nText {\\n    id: root\\n\\n    renderType: Text.NativeRendering\\n    verticalAlignment: Text.AlignVCenter\\n    color: Looks.colors.fg\\n\\n    font {\\n        hintingPreference: Font.PreferDefaultHinting\\n        family: Looks.font.family.ui\\n        pixelSize: Looks.font.pixelSize.normal\\n        weight: Looks.font.weight.regular\\n        variableAxes: Looks.font.variableAxes.ui\\n    }\\n\\n    linkColor: Looks.colors.link\\n}\\n\""

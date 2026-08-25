@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Layouts\\nimport qs.modules.common\\n\\nWToolbarButton {\\n    id: root\\n    implicitWidth: height\\n    contentItem: Item {\\n        FluentIcon {\\n            anchors.centerIn: parent\\n            icon: root.icon.name\\n            implicitSize: 18\\n            color: root.fgColor\\n        }\\n    }\\n}\\n\""

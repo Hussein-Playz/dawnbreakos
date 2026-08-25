@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Layouts\\nimport Quickshell\\nimport qs.modules.common\\nimport qs.modules.common.functions\\nimport qs.modules.common.widgets\\n\\nRowLayout {\\n    id: root\\n    spacing: 4\\n\\n    // These shouldn't be needed but it would be a terrible waste of space to follow the spec\\n    Layout.margins: -8\\n    Layout.topMargin: 0\\n}\\n\""

@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\n\\nimport qs.modules.common\\n\\nLoader {\\n    id: root\\n    property bool shown: true\\n    property alias fade: opacityBehavior.enabled\\n    property alias animation: opacityBehavior.animation\\n    opacity: shown ? 1 : 0\\n    visible: opacity > 0\\n    active: opacity > 0\\n\\n    Behavior on opacity {\\n        id: opacityBehavior\\n        animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)\\n    }\\n}\\n\""

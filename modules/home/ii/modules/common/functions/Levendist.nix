@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"pragma Singleton\\nimport Quickshell\\nimport \\\"levendist.js\\\" as Levendist\\n\\n/**\\n * Wrapper for levendist.js to play nicely with Quickshell's imports\\n */\\n\\nSingleton {\\n    function computeScore(...args) {\\n        return Levendist.computeScore(...args)\\n    }\\n\\n    function computeTextMatchScore(...args) {\\n        return Levendist.computeTextMatchScore(...args)\\n    }\\n}\\n\\n\""

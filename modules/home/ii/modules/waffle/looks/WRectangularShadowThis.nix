@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Effects\\nimport qs.modules.common\\nimport qs.modules.common.widgets\\n\\nItem {\\n    default property Item contentItem\\n    property Item shadow: WRectangularShadow {\\n        target: contentItem\\n    }\\n    implicitWidth: contentItem.implicitWidth\\n    implicitHeight: contentItem.implicitHeight\\n\\n    children: [shadow, contentItem]\\n}\\n\""

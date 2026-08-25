@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\nimport qs.modules.common\\n\\nRectangle {\\n    id: root\\n\\n    radius: Appearance.rounding.normal\\n    color: Appearance.colors.colLayer1\\n\\n    signal openAudioOutputDialog()\\n    signal openAudioInputDialog()\\n    signal openBluetoothDialog()\\n    signal openNightLightDialog()\\n    signal openWifiDialog()\\n}\\n\""

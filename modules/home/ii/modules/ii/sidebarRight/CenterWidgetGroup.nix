@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import qs.modules.common\\nimport qs.modules.common.widgets\\nimport qs.services\\nimport qs.modules.ii.sidebarRight.notifications\\nimport Qt5Compat.GraphicalEffects\\nimport QtQuick\\nimport QtQuick.Controls\\nimport QtQuick.Layouts\\n\\nRectangle {\\n    id: root\\n    radius: Appearance.rounding.normal\\n    color: Appearance.colors.colLayer1\\n\\n    NotificationList {\\n        anchors.fill: parent\\n        anchors.margins: 5\\n    }\\n}\\n\""

@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import qs.modules.common\\nimport qs.modules.common.widgets\\nimport QtQuick\\nimport QtQuick.Layouts\\n\\nRippleButton {\\n    Layout.fillHeight: true\\n    Layout.topMargin: Appearance.sizes.elevationMargin - Appearance.sizes.hyprlandGapsOut\\n    implicitWidth: implicitHeight - topInset - bottomInset\\n    buttonRadius: Appearance.rounding.normal\\n\\n    background.implicitHeight: 50\\n}\\n\""

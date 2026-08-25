@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\nimport Quickshell\\nimport qs.modules.common\\nimport qs.modules.common.functions\\nimport qs.modules.common.widgets\\n\\nStyledText {\\n    text: \\\"Some body content\\\"\\n    color: Appearance.colors.colOnSurfaceVariant\\n    font.pixelSize: Appearance.font.pixelSize.small\\n    wrapMode: Text.Wrap\\n}\\n\""

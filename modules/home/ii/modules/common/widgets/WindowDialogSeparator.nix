@@ -1,0 +1,2 @@
+# Generated QML source. This expression evaluates to the runtime QML text.
+builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Layouts\\nimport Quickshell\\nimport qs.modules.common\\nimport qs.modules.common.functions\\nimport qs.modules.common.widgets\\n\\nRectangle {\\n    implicitHeight: 1\\n    color: Appearance.colors.colOutline\\n    Layout.fillWidth: true\\n    Layout.leftMargin: -Appearance.rounding.large\\n    Layout.rightMargin: -Appearance.rounding.large\\n    Layout.topMargin: -8\\n    Layout.bottomMargin: -8\\n}\\n\""
