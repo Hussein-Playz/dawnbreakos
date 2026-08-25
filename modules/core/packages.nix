@@ -195,6 +195,7 @@ in {
       '')
       kdePackages.ark
       lxappearance
+      easyeffects
     ];
   programs.nix-ld = {
     enable = true;
