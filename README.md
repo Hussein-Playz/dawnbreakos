@@ -78,4 +78,7 @@ Then:
 sh <(curl -L https://raw.githubusercontent.com/Hussein-Playz/dawnbreakos/main/install-dawnbreakos.sh)
 ```
 
+# If you already have your own host but different device
+then **BEFORE REBUILDING** you can manually change the flake.nix's `profile = "nvidia-laptop";` to whatever GPU the new pc has (You can check their names under ./profiles) and then do `sudo nixos-generate-config --show-hardware-config > ~/dawnbreakos/hosts/your_host/hardware.nix` where your_host is your hostname then lastly rebuild using the correct profile so say you chose amd profile then u do `sudo nixos-rebuild switch --flake ~/dawnbreakos#amd`
+
 </details>
