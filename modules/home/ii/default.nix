@@ -20,15 +20,20 @@
     )
     (builtins.attrNames entries);
 
-  qmlDefinitions = collect (path: lib.hasSuffix ".nix" path && path != "default.nix") root "";
+  sourceDefinitions = collect (path: lib.hasSuffix ".nix" path && path != "default.nix") root "";
   runtimeFiles = collect (path: !lib.hasSuffix ".nix" path) root "";
 
-  qmlFiles = map (
+  generatedFiles = map (
     file: {
-      target = "${lib.removeSuffix ".nix" file.relativePath}.qml";
+      # JavaScript source is represented by `*.js.nix` so it can still be
+      # imported by QML as `*.js` in the generated runtime tree.
+      target =
+        if lib.hasSuffix ".js.nix" file.relativePath
+        then lib.removeSuffix ".nix" file.relativePath
+        else "${lib.removeSuffix ".nix" file.relativePath}.qml";
       source = pkgs.writeText "ii-${lib.replaceStrings ["/"] ["-"] file.relativePath}" (import file.path);
     }
-  ) qmlDefinitions;
+  ) sourceDefinitions;
 
   link = file: ''
     mkdir -p "$out/${builtins.dirOf file.target}"
@@ -41,5 +46,5 @@ in
       target = file.relativePath;
       source = file.path;
     }) runtimeFiles)}
-    ${lib.concatMapStrings link qmlFiles}
+    ${lib.concatMapStrings link generatedFiles}
   ''
