@@ -209,6 +209,8 @@ in
       echo "  update          - Update the flake and rebuild the system."
       echo "  update-host     - Auto set host and profile in flake.nix."
       echo "                    (Opt: ncli update-host [hostname] [profile])"
+      echo "  fetch           - A custom fetch command similar to neofetch"
+      echo "                    and fastfetch"
       echo ""
       echo "Options for rebuild, rebuild-boot, and update commands:"
       echo "  --dry, -n       - Show what would be done without doing it"
@@ -364,6 +366,117 @@ in
 
       # Return only the args string
       echo "$args_string"
+    }
+
+    # --- Fetch ---
+    get_flake_info() {
+      FETCH_HOST=""
+      FETCH_PROFILE=""
+      FETCH_USERNAME=""
+
+      if [ -f "$FLAKE_NIX_PATH" ]; then
+        while IFS='=' read -r key value; do
+          key="$(printf '%s' "$key" | ${pkgs.gnused}/bin/sed 's/[[:space:]]//g')"
+          value="$(printf '%s' "$value" | ${pkgs.gnused}/bin/sed 's/^[[:space:]]*"//; s/"[[:space:]]*$//')"
+
+          case "$key" in
+            host) FETCH_HOST="$value" ;;
+            profile) FETCH_PROFILE="$value" ;;
+            username) FETCH_USERNAME="$value" ;;
+          esac
+        done < <(
+          ${pkgs.gnugrep}/bin/grep -E '^[[:space:]]*(host|profile|username)[[:space:]]*=' "$FLAKE_NIX_PATH"
+        )
+      fi
+    }
+
+    get_current_generation() {
+      local system_link
+      system_link="$(${pkgs.coreutils}/bin/readlink /nix/var/nix/profiles/system 2>/dev/null || true)"
+
+      if [[ "$system_link" =~ system-([0-9]+)-link ]]; then
+        printf '%s\n' "''${BASH_REMATCH[1]}"
+      else
+        printf '%s\n' "unknown"
+      fi
+    }
+
+    get_git_info() {
+      local repo="$HOME/$PROJECT"
+
+      FETCH_GIT_STATUS="NOT A GIT REPOSITORY"
+      FETCH_GIT_BRANCH="unknown"
+      FETCH_GIT_COMMIT="unknown"
+
+      if ! ${pkgs.git}/bin/git -C "$repo" rev-parse --is-inside-work-tree &>/dev/null; then
+        return
+      fi
+
+      if [ -n "$(${pkgs.git}/bin/git -C "$repo" status --porcelain 2>/dev/null)" ]; then
+        FETCH_GIT_STATUS="DIRTY"
+      else
+        FETCH_GIT_STATUS="CLEAN"
+      fi
+
+      FETCH_GIT_BRANCH="$(
+        ${pkgs.git}/bin/git -C "$repo" branch --show-current 2>/dev/null || printf '%s\n' "unknown"
+      )"
+
+      FETCH_GIT_COMMIT="$(
+        ${pkgs.git}/bin/git -C "$repo" rev-parse --short HEAD 2>/dev/null || printf '%s\n' "unknown"
+      )"
+    }
+
+    get_gpu() {
+      if command -v nvidia-smi &>/dev/null; then
+        nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -n 1
+        return
+      fi
+
+      ${pkgs.pciutils}/bin/lspci 2>/dev/null \
+        | ${pkgs.gnugrep}/bin/grep -Ei 'VGA compatible controller|3D controller|Display controller' \
+        | ${pkgs.gnused}/bin/sed 's/.*: //'
+    }
+
+    get_cpu() {
+      ${pkgs.util-linux}/bin/lscpu \
+        | ${pkgs.gnugrep}/bin/grep -m1 '^Model name:' \
+        | ${pkgs.gnused}/bin/sed 's/^Model name:[[:space:]]*//'
+    }
+
+    get_memory() {
+      ${pkgs.procps}/bin/free -h \
+        | ${pkgs.gawk}/bin/awk '/^Mem:/ {print $3 " / " $2}'
+    }
+
+    get_uptime() {
+      local uptime_seconds
+      read -r uptime_seconds _ < /proc/uptime
+      uptime_seconds="''${uptime_seconds%.*}"
+
+      local days=$((uptime_seconds / 86400))
+      local hours=$((uptime_seconds % 86400 / 3600))
+      local minutes=$((uptime_seconds % 3600 / 60))
+
+      if (( days > 0 )); then
+        printf "%dd %dh %dm" "$days" "$hours" "$minutes"
+      elif (( hours > 0 )); then
+        printf "%dh %dm" "$hours" "$minutes"
+      else
+        printf "%dm" "$minutes"
+      fi
+    }
+
+    get_hyprland_version() {
+      if command -v hyprctl &>/dev/null; then
+        local version
+        version="$(hyprctl version 2>/dev/null)"
+
+        version="''${version#Hyprland }"
+        printf '%s\n' "''${version%% *}"
+      else
+        printf '%s\n' "not running"
+      fi
     }
 
     # --- Main Logic ---
@@ -763,6 +876,337 @@ in
             exit 1
             ;;
         esac
+        ;;
+      fetch)
+        # ============================================================
+        # Colors
+        # ============================================================
+
+        RESET='\033[0m'
+        BOLD='\033[1m'
+
+        # ------------------------------------------------------------
+        # Purple palette
+        # ------------------------------------------------------------
+
+        PURPLE='\033[38;5;135m'
+        LAVENDER='\033[38;5;141m'
+        LIGHT_PURPLE='\033[38;5;147m'
+        SOFT_PURPLE='\033[38;5;183m'
+        GRAY='\033[38;5;245m'
+        DARK_PURPLE='\033[38;5;127m'
+        DEEP_PURPLE='\033[38;5;129m'
+
+        # Variable output: slightly deeper than the labels,
+        # while still clearly belonging to the same purple palette.
+        VALUE_PURPLE='\033[38;5;129m'
+
+        # ------------------------------------------------------------
+        # Git status
+        # ------------------------------------------------------------
+
+        CLEAN_PURPLE='\033[38;5;114m'
+        DIRTY_PURPLE='\033[38;5;179m'
+        ERROR_PURPLE='\033[38;5;168m'
+
+        # ============================================================
+        # Info colors
+        # ============================================================
+
+        LABEL_COLOR="$LAVENDER"
+        VALUE_COLOR="$SOFT_PURPLE"
+        GIT_LABEL_COLOR="$LIGHT_PURPLE"
+
+        # ============================================================
+        # Logo colors
+        # ============================================================
+
+        LOGO_COLORS=(
+          '\033[38;2;82;32;145m'
+          '\033[38;2;94;38;166m'
+          '\033[38;2;106;44;187m'
+          '\033[38;2;118;50;208m'
+          '\033[38;2;128;57;222m'
+          '\033[38;2;137;67;232m'
+          '\033[38;2;146;78;240m'
+          '\033[38;2;155;89;246m'
+          '\033[38;2;163;100;250m'
+          '\033[38;2;170;111;252m'
+          '\033[38;2;176;121;253m'
+          '\033[38;2;181;130;254m'
+          '\033[38;2;186;139;255m'
+
+          '\033[38;2;186;139;255m'
+
+          '\033[38;2;181;130;254m'
+          '\033[38;2;176;121;253m'
+          '\033[38;2;170;111;252m'
+          '\033[38;2;163;100;250m'
+          '\033[38;2;155;89;246m'
+          '\033[38;2;146;78;240m'
+          '\033[38;2;137;67;232m'
+          '\033[38;2;128;57;222m'
+          '\033[38;2;118;50;208m'
+          '\033[38;2;106;44;187m'
+          '\033[38;2;94;38;166m'
+          '\033[38;2;82;32;145m'
+        )
+
+        # ============================================================
+        # Fetch information
+        # ============================================================
+        #
+        # Run independent information gathering in parallel.
+        # This avoids making the fetch wait for every command
+        # sequentially.
+        #
+
+        FETCH_TMP="$(${pkgs.coreutils}/bin/mktemp -d)"
+
+        cleanup_fetch() {
+          ${pkgs.coreutils}/bin/rm -rf "$FETCH_TMP"
+        }
+
+        trap cleanup_fetch EXIT
+
+        # ------------------------------------------------------------
+        # Flake information
+        # ------------------------------------------------------------
+        #
+        # Read flake.nix once instead of doing three separate
+        # grep/sed pipelines.
+        #
+        if [ -f "$FLAKE_NIX_PATH" ]; then
+          while IFS='=' read -r key value; do
+            key="''${key#"''${key%%[![:space:]]*}"}"
+            key="''${key%"''${key##*[![:space:]]}"}"
+
+            value="''${value#"''${value%%[![:space:]]*}"}"
+            value="''${value%"''${value##*[![:space:]]}"}"
+
+            # Extract the quoted value from Nix:
+            # profile = "nvidia-laptop";
+            #              ^^^^^^^^^^^^^
+            if [[ "$value" =~ ^\"([^\"]*)\"[[:space:]]*\; ]]; then
+              value="''${BASH_REMATCH[1]}"
+            fi
+
+            case "$key" in
+              host)
+                FETCH_HOST="$value"
+                ;;
+              profile)
+                FETCH_PROFILE="$value"
+                ;;
+              username)
+                FETCH_USERNAME="$value"
+                ;;
+            esac
+          done < <(
+            ${pkgs.gnugrep}/bin/grep -E '^[[:space:]]*(host|profile|username)[[:space:]]*=' "$FLAKE_NIX_PATH"
+          )
+        fi
+
+        # ------------------------------------------------------------
+        # System information — parallel
+        # ------------------------------------------------------------
+
+        ${pkgs.coreutils}/bin/uname -r \
+          > "$FETCH_TMP/kernel" &
+
+        get_hyprland_version \
+          > "$FETCH_TMP/hyprland" &
+
+        get_gpu \
+          > "$FETCH_TMP/gpu" &
+
+        get_cpu \
+          > "$FETCH_TMP/cpu" &
+
+        get_memory \
+          > "$FETCH_TMP/memory" &
+
+        get_uptime \
+          > "$FETCH_TMP/uptime" &
+
+        # ------------------------------------------------------------
+        # Git information — one git process group
+        # ------------------------------------------------------------
+
+        (
+          if ! ${pkgs.git}/bin/git -C "$HOME/$PROJECT" rev-parse --is-inside-work-tree &>/dev/null; then
+            printf '%s\n' "NOT A GIT REPOSITORY" > "$FETCH_TMP/git_status"
+            printf '%s\n' "unknown" > "$FETCH_TMP/git_branch"
+            printf '%s\n' "unknown" > "$FETCH_TMP/git_commit"
+          else
+            if [ -n "$(${pkgs.git}/bin/git -C "$HOME/$PROJECT" status --porcelain 2>/dev/null)" ]; then
+              printf '%s\n' "DIRTY" > "$FETCH_TMP/git_status"
+            else
+              printf '%s\n' "CLEAN" > "$FETCH_TMP/git_status"
+            fi
+
+            ${pkgs.git}/bin/git -C "$HOME/$PROJECT" branch --show-current 2>/dev/null \
+              > "$FETCH_TMP/git_branch" || printf '%s\n' "unknown" > "$FETCH_TMP/git_branch"
+
+            ${pkgs.git}/bin/git -C "$HOME/$PROJECT" rev-parse --short HEAD 2>/dev/null \
+              > "$FETCH_TMP/git_commit" || printf '%s\n' "unknown" > "$FETCH_TMP/git_commit"
+          fi
+
+          ${pkgs.coreutils}/bin/readlink /nix/var/nix/profiles/system 2>/dev/null \
+            > "$FETCH_TMP/system_link" || true
+        ) &
+
+        # Wait for all parallel fetch operations.
+        wait
+
+        # ------------------------------------------------------------
+        # Read gathered information
+        # ------------------------------------------------------------
+
+        FETCH_KERNEL="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/kernel")"
+        FETCH_HYPRLAND="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/hyprland")"
+        FETCH_GPU="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/gpu")"
+        FETCH_CPU="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/cpu")"
+        FETCH_MEMORY="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/memory")"
+        FETCH_UPTIME="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/uptime")"
+
+        FETCH_GIT_STATUS="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/git_status")"
+        FETCH_GIT_BRANCH="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/git_branch")"
+        FETCH_GIT_COMMIT="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/git_commit")"
+
+        FETCH_GENERATION="unknown"
+        SYSTEM_LINK="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/system_link" 2>/dev/null || true)"
+
+        if [[ "$SYSTEM_LINK" =~ system-([0-9]+)-link ]]; then
+          FETCH_GENERATION="''${BASH_REMATCH[1]}"
+        fi
+
+        if [ "$FETCH_GIT_STATUS" = "CLEAN" ]; then
+          GIT_STATUS_TEXT="''${CLEAN_PURPLE}● CLEAN''${RESET}"
+        elif [ "$FETCH_GIT_STATUS" = "DIRTY" ]; then
+          GIT_STATUS_TEXT="''${DIRTY_PURPLE}● DIRTY''${RESET}"
+        else
+          GIT_STATUS_TEXT="''${ERROR_PURPLE}● $FETCH_GIT_STATUS''${RESET}"
+        fi
+
+        # ============================================================
+        # DawnbreakOS ASCII
+        # ============================================================
+        LOGO=(
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣶⠶⠶⠾⢿⣿⠿⠷⠶⢶⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⣾⠟⠋⠁⠀⠀⠀⠀⢸⣿⡆⠀⠀⠀⠀⠉⠙⠻⣷⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⣠⡾⠟⠁⠙⣆⠀⣀⣤⡤⠴⠶⣾⣿⡷⠶⠦⣤⣄⣀⠀⣴⠃⠉⠻⣶⣄⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⣠⡾⠋⠀⠀⢀⣤⠟⠋⠁⠀⠀⠀⣴⣿⢿⣿⣆⠀⠀⠀⠉⠙⠷⣄⡀⠀⠀⠙⣷⡀⠀⠀⠀⠀⠀⠀"
+          "⣀⠀⠀⠀⠀⣰⠟⠁⠀⢀⡴⠋⠀⠀⠀⠀⠀⢀⣾⡿⠃⠀⠹⣿⣧⡀⠀⠀⠀⠀⠈⠛⣦⡀⠀⠈⢻⣆⠀⠀⠀⠀⣀"
+          "⠉⠳⢦⣄⣼⠏⠀⠀⣠⠏⠀⠀⠀⠀⠀⠀⣠⣿⡿⠁⠀⠀⠀⠘⣿⣷⡄⠀⠀⠀⠀⠀⠈⢳⡄⠀⠀⢻⣆⣠⡶⠛⠁"
+          "⠀⠀⠀⣹⡟⠛⠷⣶⣧⣀⠀⠀⠀⠀⠀⣰⣿⡿⠁⠀⠀⠀⠀⠀⠘⣿⣿⡄⠀⠀⠀⠀⠀⣀⣽⡶⠾⠛⢻⡇⠀⠀⠀"
+          "⠀⠀⢀⣿⡀⠀⢠⠀⠉⠻⢷⣦⣀⠀⣰⣿⣿⠁⢀⣠⣴⣶⣤⣄⠀⠸⣿⣿⡄⢀⣠⣴⡿⠛⠉⢷⠀⠀⢘⣿⠀⠀⠀"
+          "⠀⠀⢸⡏⠉⠉⢻⠁⠀⠀⠀⢙⣿⣿⣿⣿⡇⣰⡿⠉⣀⣤⡈⠙⢷⡄⢹⣿⣿⡿⣿⠁⠀⠀⠀⢸⡟⠉⠉⣿⠀⠀⠀"
+          "⠀⠀⢸⡇⠀⠀⢸⠀⠀⠀⠀⢾⡃⣿⣿⣿⠀⣿⠀⢸⣿⣿⣿⡆⠈⣿⢘⣿⣿⣷⢸⡇⠀⠀⠀⢸⡇⠀⠀⣿⡇⠀⠀"
+          "⠀⠀⢸⡇⠀⢀⣸⡀⠀⠀⠀⢘⣷⣿⣿⣿⡆⢻⣦⡈⠛⠿⠋⢀⣾⠇⢸⣿⣿⣷⣾⠁⠀⠀⠀⢸⣇⠀⠀⣿⠀⠀⠀"
+          "⠀⠀⠘⣿⠋⠉⠙⡇⠀⣠⣴⡿⠛⠉⢻⣿⣷⠀⠙⠻⢷⣶⠾⠟⠁⢠⣿⣿⠏⠉⠻⢷⣦⣀⠀⣼⠉⠉⢙⣿⠀⠀⠀"
+          "⠀⠀⠀⢻⣇⣠⣤⣿⡿⠛⠁⠀⠀⠀⠀⢻⣿⣷⠀⠀⠀⠀⠀⠀⢀⣾⣿⠏⠀⠀⠀⠀⠉⠛⢿⣧⣤⣀⣼⡇⠀⠀⠀"
+          "⠀⠀⣀⡴⠟⢿⡏⠻⣄⠀⠀⠀⠀⠀⠀⠹⣿⣧⠀⠀⠀⠀⢀⣾⣿⠏⠀⠀⠀⠀⠀⠀⣠⠏⠀⠈⣹⡟⠻⢦⣄⠀"
+          "⠋⠁⠀⠀⠈⢻⣆⠀⠀⠙⢦⡀⠀⠀⠀⠀⠀⠙⣿⣧⡀⠀⢠⣾⡿⠃⠀⠀⠀⠀⠀⣠⡞⠁⠀⠀⣴⠟⠀⠀⠀⠉⠛"
+          "⠀⠀⠀⠀⠀⠀⠻⣦⡀⠀⠀⠙⠶⣄⡀⠀⠀⠀⠘⢿⣿⣴⣿⠟⠁⠀⠀⠀⣀⣤⠞⠉⠀⠀⣠⣾⠋⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠈⠻⣦⣄⠀⢀⡟⠉⠛⠶⠦⢤⣤⣿⣿⣯⣤⡤⠶⠖⠛⠉⢷⡀⠀⣠⣾⠟⠁⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⢷⣿⣄⡀⠀⠀⠀⠀⠀⢸⣿⠃⠀⠀⠀⠀⠀⢀⣠⣷⠿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠿⣶⣶⣤⣤⣼⣿⣦⣤⣤⣶⡶⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⣿⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+          "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀"
+        )
+
+        # ============================================================
+        # Fetch information
+        # ============================================================
+
+        INFO=(
+          "                                         "
+          "                                         "
+          "''${PURPLE}''${BOLD}DawnbreakOS''${RESET}"
+          "''${GRAY}────────────────────────────────────────''${RESET}"
+
+          "''${LABEL_COLOR}OS    ''${RESET}''${VALUE_COLOR}DawnbreakOS''${RESET}"
+          "''${LABEL_COLOR} ├     ''${RESET}''${VALUE_COLOR}$FETCH_PROFILE''${RESET}"
+          "''${LABEL_COLOR} ├     ''${RESET}''${VALUE_COLOR}$FETCH_USERNAME''${RESET}"
+          "''${LABEL_COLOR} ├   Kernel ''${RESET}''${VALUE_COLOR}$FETCH_KERNEL''${RESET}"
+          "''${LABEL_COLOR} └   Hyprland ''${RESET}''${VALUE_COLOR}$FETCH_HYPRLAND''${RESET}"
+
+          "''${LABEL_COLOR}Host  ''${RESET}''${VALUE_COLOR}$FETCH_HOST''${RESET}"
+          "''${LABEL_COLOR} ├     ''${RESET}''${VALUE_COLOR}$FETCH_CPU''${RESET}"
+          "''${LABEL_COLOR} ├ 󰢮   ''${RESET}''${VALUE_COLOR}$FETCH_GPU''${RESET}"
+          "''${LABEL_COLOR} ├     ''${RESET}''${VALUE_COLOR}$FETCH_MEMORY''${RESET}"
+          "''${LABEL_COLOR} └ 󰅐   ''${RESET}''${VALUE_COLOR}$FETCH_UPTIME''${RESET}"
+
+          "''${GIT_LABEL_COLOR}Git  ''${RESET}$GIT_STATUS_TEXT"
+          "''${GIT_LABEL_COLOR} ├   ''${RESET}''${VALUE_COLOR}$FETCH_GIT_BRANCH''${RESET}"
+          "''${GIT_LABEL_COLOR} ├ 󰊢  ''${RESET}''${VALUE_COLOR}$FETCH_GIT_COMMIT''${RESET}"
+          "''${GIT_LABEL_COLOR} └ 󰆼 Generation: ''${RESET}''${VALUE_COLOR}$FETCH_GENERATION''${RESET}"
+        )
+
+        # ============================================================
+        # Render
+        # ============================================================
+
+        LOGO_WIDTH=64
+        LOGO_GAP=2
+
+        INFO_COUNT=''${#INFO[@]}
+        LOGO_COUNT=''${#LOGO[@]}
+
+        # Center the shorter column against the taller one.
+        if (( LOGO_COUNT > INFO_COUNT )); then
+          INFO_OFFSET=$(( (LOGO_COUNT - INFO_COUNT) / 2 ))
+          LOGO_OFFSET=0
+        else
+          LOGO_OFFSET=$(( (INFO_COUNT - LOGO_COUNT) / 2 ))
+          INFO_OFFSET=0
+        fi
+
+        printf "\n"
+
+        for ((i = 0; i < LOGO_COUNT || i < INFO_COUNT; i++)); do
+          LOGO_INDEX=$((i - LOGO_OFFSET))
+          INFO_INDEX=$((i - INFO_OFFSET))
+
+          if (( LOGO_INDEX >= 0 && LOGO_INDEX < LOGO_COUNT )); then
+            logo="''${LOGO[$LOGO_INDEX]}"
+
+            # All characters in this ASCII-art column occupy one
+            # terminal cell, so Bash's character count is enough.
+            logo_width=''${#logo}
+
+            left_padding=$(( (LOGO_WIDTH - logo_width) / 2 ))
+            right_padding=$(( LOGO_WIDTH - logo_width - left_padding ))
+
+            logo_color="''${LOGO_COLORS[$LOGO_INDEX]:-$PURPLE}"
+
+            printf "%*s%b%s%*s%b" \
+              "$left_padding" \
+              "" \
+              "$logo_color$BOLD" \
+              "$logo" \
+              "$right_padding" \
+              "" \
+              "$RESET"
+          else
+            printf "%*s" "$LOGO_WIDTH" ""
+          fi
+
+          printf "%*s" "$LOGO_GAP" ""
+
+          if (( INFO_INDEX >= 0 && INFO_INDEX < INFO_COUNT )); then
+            printf "%b" "''${INFO[$INFO_INDEX]}"
+          fi
+
+          printf "\n"
+        done
+
+        printf "\n"
         ;;
       *)
         echo "Error: Invalid command '$1'" >&2
