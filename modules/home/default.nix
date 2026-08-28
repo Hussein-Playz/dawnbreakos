@@ -30,7 +30,6 @@ in {
       ./cli/lazygit.nix
       ./emoji.nix
       ./eza.nix
-      ./fastfetch
       ./gtk.nix
       ./hyprland
       ./terminals/kitty.nix

@@ -14,7 +14,6 @@
       alias prime-run='__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia "$@"'
       alias ls="ls"
       alias workf="cd $HOME/dawnbreakos && kate $HOME/dawnbreakos"
-      alias fastfetch="clear && fastfetch"
       if [ -e /run/current-system/etc/set-environment ]; then
         . /run/current-system/etc/set-environment
       fi
