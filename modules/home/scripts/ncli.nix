@@ -1137,9 +1137,9 @@ in
           "''${LABEL_COLOR} └   Hyprland ''${RESET}''${VALUE_COLOR}$FETCH_HYPRLAND''${RESET}"
 
           "''${LABEL_COLOR}Host  ''${RESET}''${VALUE_COLOR}$FETCH_HOST''${RESET}"
-          "''${LABEL_COLOR} ├     ''${RESET}''${VALUE_COLOR}$FETCH_CPU''${RESET}"
+          "''${LABEL_COLOR} ├    ''${RESET}''${VALUE_COLOR}$FETCH_CPU''${RESET}"
           "''${LABEL_COLOR} ├ 󰢮   ''${RESET}''${VALUE_COLOR}$FETCH_GPU''${RESET}"
-          "''${LABEL_COLOR} ├     ''${RESET}''${VALUE_COLOR}$FETCH_MEMORY''${RESET}"
+          "''${LABEL_COLOR} ├    ''${RESET}''${VALUE_COLOR}$FETCH_MEMORY''${RESET}"
           "''${LABEL_COLOR} └ 󰅐   ''${RESET}''${VALUE_COLOR}$FETCH_UPTIME''${RESET}"
 
           "''${GIT_LABEL_COLOR}Git  ''${RESET}$GIT_STATUS_TEXT"

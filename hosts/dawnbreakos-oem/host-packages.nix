@@ -11,7 +11,6 @@
     kdePackages.konsole
     atlauncher
     protonup-qt
-    lutris
     protontricks
     qemu
     gnome-system-monitor
