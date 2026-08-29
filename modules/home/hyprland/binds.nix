@@ -211,29 +211,25 @@ in {
         hl.dsp.window.float({ action = "toggle" }),
         { description = "Window: Float/Tile Toggle" })
 
-      hl.bind(modifier .. " + ALT + F",
-        hl.dsp.exec_cmd("hyprland-float-all"),
-        { description = "Window: Float All Windows" })
+      hl.bind(modifier .. " + ALT + 1", function()
+        hl.config({ general = { layout = "dwindle" } })
+        { description = "Window: Layout Dwindle"}
+      end)
 
-      hl.bind(modifier .. " + ALT + L",
-        hl.dsp.exec_cmd("hyprland-change-layout toggle"),
-        { description = "Window: Toggle Layouts" })
+      hl.bind(modifier .. " + ALT + 2", function()
+        hl.config({ general = { layout = "master" } })
+        { description = "Window: Layout Master"}
+      end)
 
-      hl.bind(modifier .. " + ALT + 1",
-        hl.dsp.exec_cmd("hyprland-change-layout dwindle"),
-        { description = "Window: Layout Dwindle" })
+      hl.bind(modifier .. " + ALT + 3", function()
+        hl.config({ general = { layout = "scrolling" } })
+        { description = "Window: Layout Scrolling"}
+      end)
 
-      hl.bind(modifier .. " + ALT + 2",
-        hl.dsp.exec_cmd("hyprland-change-layout master"),
-        { description = "Window: Layout Master" })
-
-      hl.bind(modifier .. " + ALT + 3",
-        hl.dsp.exec_cmd("hyprland-change-layout scrolling"),
-        { description = "Window: Layout Scrolling" })
-
-      hl.bind(modifier .. " + ALT + 4",
-        hl.dsp.exec_cmd("hyprland-change-layout monocle"),
-        { description = "Window: Layout Monocle" })
+      hl.bind(modifier .. " + ALT + 4", function()
+        hl.config({ general = { layout = "monocle" } })
+        { description = "Window: Layout Monocle"}
+      end)
 
       hl.bind(modifier .. " + SHIFT + left",
         hl.dsp.window.move({ direction = "l" }),

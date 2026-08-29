@@ -44,7 +44,6 @@
         ".config/mimeapps.list.backup"
       ];
     })
-    (import ./db-battery.nix {inherit pkgs profile;})
   ];
 
   xdg.desktopEntries.dropterminal = {
