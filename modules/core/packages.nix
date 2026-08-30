@@ -193,7 +193,6 @@ in {
       '')
       kdePackages.ark
       lxappearance
-      easyeffects
       ffmpegthumbnailer
     ];
   programs.nix-ld = {
