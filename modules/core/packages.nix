@@ -194,6 +194,8 @@ in {
       kdePackages.ark
       lxappearance
       ffmpegthumbnailer
+      iw
+      git-lfs
     ];
   programs.nix-ld = {
     enable = true;
@@ -208,6 +210,7 @@ in {
       libXfixes
       freetype
       fontconfig
+      sqlite.out
     ];
   };
 }
