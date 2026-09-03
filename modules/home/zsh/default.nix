@@ -3,6 +3,7 @@
   pkgs,
   lib,
   config,
+  host,
   ...
 }: {
   imports = [
@@ -56,6 +57,9 @@
       unsetopt SHARE_HISTORY
       if [ -f $HOME/.zshrc-personal ]; then
         source $HOME/.zshrc-personal
+      fi
+      if [ -f "$HOME/.zshrc-host" ]; then
+        source "$HOME/.zshrc-host"
       fi
     '';
 

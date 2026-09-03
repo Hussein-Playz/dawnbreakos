@@ -23,7 +23,7 @@
         openssl
       ];
     })
-    rustup
+    osu-lazer
   ];
   # Add host specific flatpaks here
   services = {

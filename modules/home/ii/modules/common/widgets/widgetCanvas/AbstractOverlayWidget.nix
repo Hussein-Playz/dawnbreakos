@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport Quickshell\\nimport qs.modules.common\\n\\n/*\\n * Abstract widgets for an overlay. Doesn't contain any visuals.\\n */\\nAbstractWidget {\\n    id: root\\n\\n    property bool pinned: false // Whether to stay visible when the overlay is dismissed\\n    property bool clickthrough: true // When pinned, whether to allow clicks go through\\n}\\n\""

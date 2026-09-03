@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport org.kde.kirigami as Kirigami\\nimport qs.services\\nimport qs.modules.common\\n\\nKirigami.Icon {\\n    id: root\\n    \\n    property real implicitSize: 26\\n    implicitWidth: implicitSize\\n    implicitHeight: implicitSize\\n\\n    roundToIconSize: false\\n    animated: true // It's just fading from one icon to another\\n}\\n\""

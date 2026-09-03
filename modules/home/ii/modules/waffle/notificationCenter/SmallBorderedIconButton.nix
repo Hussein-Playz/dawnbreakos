@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport qs\\nimport qs.services\\nimport qs.modules.common\\nimport qs.modules.waffle.looks\\n\\nWBorderedButton {\\n    id: root\\n    implicitWidth: 24\\n    implicitHeight: 24\\n    contentItem: Item {\\n        FluentIcon {\\n            anchors.centerIn: parent\\n            implicitSize: 12\\n            icon: root.icon.name\\n            color: root.fgColor\\n        }\\n    }\\n}\\n\""

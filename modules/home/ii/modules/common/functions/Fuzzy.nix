@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"pragma Singleton\\nimport Quickshell\\nimport \\\"fuzzysort.js\\\" as FuzzySort\\n\\n/**\\n * Wrapper for FuzzySort to play nicely with Quickshell's imports\\n */\\n\\nSingleton {\\n    function go(...args) {\\n        return FuzzySort.go(...args)\\n    }\\n\\n    function prepare(...args) {\\n        return FuzzySort.prepare(...args)\\n    }\\n}\\n\\n\""

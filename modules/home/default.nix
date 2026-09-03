@@ -49,7 +49,6 @@ in {
       ./zoxide.nix
       ./zsh
       ./vencord.nix
-      ./DawnbreakLauncher.nix
       ./fuzzel.nix
     ]
     ++ (

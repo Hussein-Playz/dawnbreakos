@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Layouts\\nimport Quickshell\\nimport qs.services\\nimport qs.modules.common\\nimport qs.modules.common.functions\\nimport qs.modules.waffle.looks\\nimport qs.modules.waffle.actionCenter\\n\\nActionCenterToggle {\\n    id: root\\n\\n    name: Network.ethernet ? Translation.tr(\\\"Network\\\") : Network.networkName\\n\\n\\n}\\n\""

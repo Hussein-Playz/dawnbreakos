@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport Quickshell\\nimport qs.modules.common\\nimport qs.modules.ii.overlay\\n\\nStyledOverlayWidget {\\n    id: root\\n    title: \\\"MangoHud FPS\\\"\\n    minimumWidth: 275\\n    minimumHeight: 100\\n    contentItem: FpsLimiterContent {\\n        radius: root.contentRadius\\n    }\\n}\\n\""

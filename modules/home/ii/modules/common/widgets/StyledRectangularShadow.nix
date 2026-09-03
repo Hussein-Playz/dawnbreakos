@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Effects\\nimport qs.modules.common\\n\\nRectangularShadow {\\n    required property var target\\n    anchors.fill: target\\n    radius: target.radius\\n    blur: 0.9 * Appearance.sizes.elevationMargin\\n    offset: Qt.vector2d(0.0, 1.0)\\n    spread: 1\\n    color: Appearance.colors.colShadow\\n    cached: true\\n}\\n\""

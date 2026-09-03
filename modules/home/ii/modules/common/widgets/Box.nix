@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"pragma ComponentBehavior: Bound\\nimport QtQuick\\n\\n// A type that's both capable of being rows and columns\\n// Qt Row is just a locked down Grid smh\\n// Calling it a Box because that's how row-or-column widget is called in Gtk\\nGrid {\\n    id: root\\n    \\n    property bool vertical: false\\n    columns: vertical ? 1 : -1\\n    rows: vertical ? -1 : 1\\n\\n    property alias spacing: root.rowSpacing\\n    columnSpacing: rowSpacing\\n}\\n\""

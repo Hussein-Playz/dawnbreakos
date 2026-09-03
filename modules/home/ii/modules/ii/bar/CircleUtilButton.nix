@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import qs.modules.common\\nimport qs.modules.common.widgets\\nimport QtQuick\\n\\nRippleButton {\\n    id: button\\n\\n    required default property Item content\\n    property bool extraActiveCondition: false\\n\\n    implicitHeight: Math.max(content.implicitHeight, 26, content.implicitHeight)\\n    implicitWidth: implicitHeight\\n    contentItem: content\\n\\n}\\n\""

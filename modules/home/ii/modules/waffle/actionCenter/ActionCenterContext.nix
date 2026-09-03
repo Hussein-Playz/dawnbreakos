@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"pragma Singleton\\npragma ComponentBehavior: Bound\\nimport QtQuick\\nimport QtQuick.Controls\\nimport Quickshell\\n\\nSingleton {\\n    id: root\\n    \\n    property StackView stackView\\n\\n    function push(component) {\\n        if (stackView) {\\n            stackView.push(component)\\n        }\\n    }\\n\\n    function back() {\\n        if (stackView && stackView.depth > 1) {\\n            stackView.pop()\\n        }\\n    }\\n}\\n\""

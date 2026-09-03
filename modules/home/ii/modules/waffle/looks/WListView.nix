@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import qs.modules.common\\nimport qs.modules.common.widgets\\nimport QtQuick\\nimport QtQuick.Controls\\n\\nListView {\\n    id: root\\n\\n    boundsBehavior: Flickable.DragOverBounds\\n\\n    ScrollBar.vertical: WScrollBar {}\\n\\n    displaced: Transition {\\n        animations: [Looks.transition.enter.createObject(this, {\\n                property: \\\"y\\\"\\n            })]\\n    }\\n\\n}\\n\""

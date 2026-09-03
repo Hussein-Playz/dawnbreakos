@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import qs.services\\nimport qs.modules.common\\nimport qs.modules.common.models.quickToggles\\nimport qs.modules.common.functions\\nimport qs.modules.common.widgets\\nimport QtQuick\\n\\nAndroidQuickToggleButton {\\n    toggleModel: IdleInhibitorToggle {}\\n}\\n\\n\""

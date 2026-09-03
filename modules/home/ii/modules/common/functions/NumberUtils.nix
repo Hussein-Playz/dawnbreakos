@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"pragma Singleton\\nimport Quickshell\\n\\nSingleton {\\n    id: root\\n\\n    /**\\n     * Rounds the given number to the nearest even integer.\\n     *\\n     * @param {number} num - The number to round.\\n     * @returns {number} The nearest even integer.\\n     */\\n    function roundToEven(num) {\\n        return Math.round(num / 2) * 2;\\n    }\\n}\\n\""

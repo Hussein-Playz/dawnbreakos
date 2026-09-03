@@ -1,5 +1,5 @@
 {
-  description = "Dawnbreak System";
+  description = "Dawnbreak OS";
 
   inputs = {
     home-manager = {
@@ -43,16 +43,24 @@
     mkNixosConfig = gpuProfile:
       nixpkgs.lib.nixosSystem {
         inherit system;
+
         specialArgs = {
           inherit inputs;
           inherit username;
           inherit host;
-          inherit profile; # keep using the let-bound profile for modules/scripts
+          inherit profile;
         };
+
         modules = [
           ./modules/core/overlays.nix
           ./profiles/${gpuProfile}
           nix-flatpak.nixosModules.nix-flatpak
+
+          {
+            home-manager.extraSpecialArgs = {
+              inherit inputs username host profile;
+            };
+          }
         ];
       };
   in {

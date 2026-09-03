@@ -11,7 +11,7 @@ in {
       enable = true;
       defaultEditor = true;
     };
-    firefox.enable = false; # Firefox is not installed by default
+    firefox.enable = false;
     hyprland = {
       enable = true; # set this so desktop file is created
       withUWSM = false;
@@ -30,12 +30,7 @@ in {
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = ["openssl-1.1.1w"];
 
-  environment.systemPackages = with pkgs;
-    [
-      awww
-      inputs.synfetch.packages.${pkgs.stdenv.hostPlatform.system}.default
-    ]
-    ++ [
+  environment.systemPackages = with pkgs; [
       gpu-screen-recorder
       alejandra # nix formatter
       amfora # Fancy Terminal Browser For Gemini Protocol
@@ -183,14 +178,8 @@ in {
       jemalloc
       mesa
       kdePackages.kirigami
-      upscayl
       qimgv
       kdePackages.kde-cli-tools
-      (runCommand "kde-applications-menu" {} ''
-        mkdir -p $out/etc/xdg/menus
-        cp ${kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu \
-          $out/etc/xdg/menus/applications.menu
-      '')
       kdePackages.ark
       lxappearance
       ffmpegthumbnailer
@@ -210,7 +199,6 @@ in {
       libXfixes
       freetype
       fontconfig
-      sqlite.out
     ];
   };
 }

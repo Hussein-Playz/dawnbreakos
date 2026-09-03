@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Layouts\\nimport qs.modules.common\\nimport qs.modules.common.functions\\n\\nToolbarButton {\\n    colBackground: ColorUtils.transparentize(Appearance.colors.colPrimaryContainer)\\n    colBackgroundHover: Appearance.colors.colPrimaryContainerHover\\n    colRipple: Appearance.colors.colPrimaryContainerActive\\n}\\n\""

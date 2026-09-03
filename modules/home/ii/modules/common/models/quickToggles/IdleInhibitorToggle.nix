@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport Quickshell\\nimport qs\\nimport qs.services\\nimport qs.modules.common\\nimport qs.modules.common.functions\\nimport qs.modules.common.widgets\\n\\nQuickToggleModel {\\n    name: Translation.tr(\\\"Keep awake\\\")\\n\\n    toggled: Idle.inhibit\\n    icon: \\\"coffee\\\"\\n    mainAction: () => {\\n        Idle.toggleInhibit()\\n    }\\n    tooltipText: Translation.tr(\\\"Keep system awake\\\")\\n}\\n\""

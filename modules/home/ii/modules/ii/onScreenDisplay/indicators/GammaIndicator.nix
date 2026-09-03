@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import qs.services\\nimport QtQuick\\nimport Quickshell\\nimport Quickshell.Hyprland\\nimport qs.modules.ii.onScreenDisplay\\n\\nOsdValueIndicator {\\n    id: rotateIcon\\n\\n    icon: \\\"wb_twilight\\\"\\n    name: Translation.tr(\\\"Gamma\\\")\\n    from: Hyprsunset.gammaLowerLimit / 100\\n    value: Hyprsunset.gamma / 100 ?? 0.5\\n}\\n\""

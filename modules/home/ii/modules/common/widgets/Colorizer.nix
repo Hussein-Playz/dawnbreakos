@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport QtQuick.Effects\\nimport qs.modules.common\\n\\nMultiEffect {\\n    property color sourceColor: \\\"black\\\"\\n\\n    colorization: 1\\n    brightness: 1 - sourceColor.hslLightness\\n\\n    Behavior on colorizationColor {\\n        animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)\\n    }\\n}\\n\""

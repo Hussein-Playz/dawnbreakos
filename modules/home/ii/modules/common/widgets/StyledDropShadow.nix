@@ -1,2 +1,0 @@
-# Generated QML source. This expression evaluates to the runtime QML text.
-builtins.fromJSON "\"import QtQuick\\nimport Qt5Compat.GraphicalEffects\\nimport qs.modules.common\\n\\nDropShadow {\\n    required property var target\\n    source: target\\n    anchors.fill: source\\n    radius: 8\\n    samples: radius * 2 + 1\\n    color: Appearance.colors.colShadow\\n    transparentBorder: true\\n}\\n\""
