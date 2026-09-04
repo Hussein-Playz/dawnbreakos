@@ -13,10 +13,10 @@ Button {
     property bool toggled
     property string buttonText
     property bool pointingHandCursor: true
-    property real buttonRadius: Appearance?.rounding?.small ?? 4
+    property real buttonRadius: Appearance?.rounding?.large ?? 25
     property real buttonRadiusPressed: buttonRadius
     property real buttonEffectiveRadius: root.down ? root.buttonRadiusPressed : root.buttonRadius
-    property int rippleDuration: 1200
+    property int rippleDuration: 400
     property bool rippleEnabled: true
     property var downAction // When left clicking (down)
     property var releaseAction // When left clicking (release)
@@ -24,11 +24,11 @@ Button {
     property var middleClickAction // When middle clicking
 
     property color colBackground: ColorUtils.transparentize(Appearance?.colors.colLayer1Hover, 1) || "transparent"
-    property color colBackgroundHover: Appearance?.colors.colLayer1Hover ?? "#E5DFED"
-    property color colBackgroundToggled: Appearance?.colors.colPrimary ?? "#65558F"
-    property color colBackgroundToggledHover: Appearance?.colors.colPrimaryHover ?? "#77699C"
-    property color colRipple: Appearance?.colors.colLayer1Active ?? "#D6CEE2"
-    property color colRippleToggled: Appearance?.colors.colPrimaryActive ?? "#D6CEE2"
+    property color colBackgroundHover: ColorUtils.transparentize(Appearance?.colors.colOnLayer1 ?? "#ffffff", 0.92)
+    property color colBackgroundToggled: Appearance?.colors.colPrimaryContainer ?? "#2d2a2f"
+    property color colBackgroundToggledHover: ColorUtils.mix(Appearance?.colors.colPrimaryContainer ?? "#2d2a2f", Appearance?.colors.colOnPrimaryContainer ?? "#bcb6bc", 0.12)
+    property color colRipple: ColorUtils.transparentize(Appearance?.colors.colOnLayer1 ?? "#ffffff", 0.90)
+    property color colRippleToggled: ColorUtils.transparentize(Appearance?.colors.colOnPrimaryContainer ?? "#ffffff", 0.90)
 
     opacity: root.enabled ? 1 : 0.4
     property color buttonColor: ColorUtils.transparentize(root.toggled ? 

@@ -11,7 +11,7 @@ Item {
     id: root
 
     property bool enableShadow: true
-    property real padding: 8
+    property real padding: 10
     property alias colBackground: background.color
     property alias spacing: toolbarLayout.spacing
     default property alias toolbarData: toolbarLayout.data
@@ -31,8 +31,8 @@ Item {
     Rectangle {
         id: background
         anchors.fill: parent
-        color: Appearance.m3colors.m3surfaceContainer
-        implicitHeight: 56
+        color: Appearance.colors.colLayer2
+        implicitHeight: 52
         implicitWidth: toolbarLayout.implicitWidth + root.padding * 2
         radius: height / 2
 

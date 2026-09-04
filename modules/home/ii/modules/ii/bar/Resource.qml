@@ -44,7 +44,7 @@ Item {
                     fill: 1
                     text: iconName
                     iconSize: Appearance.font.pixelSize.normal
-                    color: Appearance.m3colors.m3onSecondaryContainer
+                    color: Appearance.colors.colOnLayer0
                 }
             }
         }

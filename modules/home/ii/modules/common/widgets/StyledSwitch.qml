@@ -7,11 +7,11 @@ import QtQuick.Controls
  */
 Switch {
     id: root
-    property real scale: 0.75 // Default in m3 spec is huge af
+    property real scale: 0.78 // Default in m3 spec is huge af
     implicitHeight: 32 * root.scale
     implicitWidth: 52 * root.scale
     property color activeColor: Appearance?.colors.colPrimary ?? "#685496"
-    property color inactiveColor: Appearance?.colors.colSurfaceContainerHighest ?? "#45464F"
+    property color inactiveColor: Appearance?.colors.colSurfaceContainerHigh ?? "#2b2a2a"
 
     PointingHandInteraction {}
 
@@ -21,8 +21,8 @@ Switch {
         height: parent.height
         radius: Appearance?.rounding.full ?? 9999
         color: root.checked ? root.activeColor : root.inactiveColor
-        border.width: 2 * root.scale
-        border.color: root.checked ? root.activeColor : Appearance.m3colors.m3outline
+        border.width: 1 * root.scale
+        border.color: root.checked ? root.activeColor : Appearance.colors.colOutlineVariant
 
         Behavior on color {
             animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)

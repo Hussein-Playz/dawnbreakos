@@ -136,7 +136,6 @@ in {
       fontconfig
       matugen
       starship
-      hyprsunset
       wl-clipboard
       kdePackages.bluedevil
       gnome-keyring

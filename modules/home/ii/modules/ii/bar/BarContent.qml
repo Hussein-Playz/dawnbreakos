@@ -25,29 +25,11 @@ Item { // Bar content region
         color: Appearance.colors.colOutlineVariant
     }
 
-    // Background shadow
-    Loader {
-        active: Config.options.bar.showBackground && Config.options.bar.cornerStyle === 1 && Config.options.bar.floatStyleShadow
-        anchors.fill: barBackground
-        sourceComponent: StyledRectangularShadow {
-            anchors.fill: undefined // The loader's anchors act on this, and this should not have any anchor
-            target: barBackground
-        }
-    }
-    // Background
-    Rectangle {
-        id: barBackground
-        anchors {
-            fill: parent
-            margins: Config.options.bar.cornerStyle === 1 ? (Appearance.sizes.hyprlandGapsOut) : 0 // idk why but +1 is needed
-        }
-        color: Config.options.bar.showBackground ? Appearance.colors.colLayer0 : "transparent"
-        radius: Config.options.bar.cornerStyle === 1 ? Appearance.rounding.windowRounding : 0
-        border.width: Config.options.bar.cornerStyle === 1 ? 1 : 0
-        border.color: Appearance.colors.colLayer0Border
-    }
+    // The bar is intentionally transparent.
+    // Each section owns its own surface.
 
-    FocusedScrollMouseArea { // Left side | scroll to change brightness
+    // LEFT GROUP -----------------------------------------------------------
+    FocusedScrollMouseArea {
         id: barLeftSideMouseArea
 
         anchors {
@@ -56,18 +38,19 @@ Item { // Bar content region
             left: parent.left
             right: middleSection.left
         }
-        implicitWidth: leftSectionRowLayout.implicitWidth
+
+        implicitWidth: leftGroup.implicitWidth + 32
         implicitHeight: Appearance.sizes.baseBarHeight
 
         onScrollDown: Brightness.decreaseBrightness()
         onScrollUp: Brightness.increaseBrightness()
         onMovedAway: GlobalStates.osdBrightnessOpen = false
+
         onPressed: event => {
             if (event.button === Qt.LeftButton)
                 GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen;
         }
 
-        // Visual content
         ScrollHint {
             reveal: barLeftSideMouseArea.hovered
             icon: Hyprsunset.gamma === 100 ? "light_mode" : "wb_twilight"
@@ -77,21 +60,18 @@ Item { // Bar content region
             anchors.verticalCenter: parent.verticalCenter
         }
 
-        RowLayout {
-            id: leftSectionRowLayout
-            anchors.fill: parent
-            spacing: 0
+        BarGroup {
+            id: leftGroup
 
-            // LeftSidebarButton { // Left sidebar button
-            //     id: leftSidebarButton
-            //     Layout.alignment: Qt.AlignVCenter
-            //     Layout.leftMargin: Appearance.rounding.screenRounding
-            //     colBackground: barLeftSideMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
-            // }
+            anchors {
+                left: parent.left
+                leftMargin: 12
+                verticalCenter: parent.verticalCenter
+            }
+
+            padding: 8
 
             ActiveWindow {
-                Layout.leftMargin: 20
-                Layout.rightMargin: Appearance.rounding.screenRounding
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.useShortenedForm === 0
@@ -99,95 +79,135 @@ Item { // Bar content region
         }
     }
 
-    Row { // Middle section
+    // CENTER GROUP ---------------------------------------------------------
+    //
+    // One shared pill containing:
+    //   Resources / Media | Clock | Workspaces / Buttons / Battery
+    //
+    // The individual BarGroups have their backgrounds disabled so they
+    // don't create three separate pills.
+    //
+    Item {
         id: middleSection
+
         anchors {
             top: parent.top
             bottom: parent.bottom
             horizontalCenter: parent.horizontalCenter
         }
-        spacing: 4
 
-        BarGroup {
-            id: leftCenterGroup
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: root.centerSideModuleWidth
+        implicitWidth: middleRow.implicitWidth + 16
+        implicitHeight: Appearance.sizes.baseBarHeight
 
-            Resources {
-                alwaysShowAllResources: root.useShortenedForm === 2
-                Layout.fillWidth: root.useShortenedForm === 2
+        Rectangle {
+            id: middleBackground
+
+            anchors {
+                fill: parent
+                topMargin: 4
+                bottomMargin: 4
             }
 
-            Media {
-                visible: root.useShortenedForm < 2
-                Layout.fillWidth: true
-            }
+            color: Appearance.colors.colLayer0
+            radius: Appearance.rounding.full
+
+            border.width: 1
+            border.color: Appearance.colors.colLayer0Border
         }
 
-        VerticalBarSeparator {
-            visible: Config.options?.bar.borderless
-        }
+        Row {
+            id: middleRow
 
-        BarGroup {
-            id: middleCenterGroup
-            anchors.verticalCenter: parent.verticalCenter
-
-            ClockWidget {
-                showDate: (Config.options.bar.verbose && root.useShortenedForm < 2)
-                Layout.alignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-            }
-        }
-
-        VerticalBarSeparator {
-            visible: Config.options?.bar.borderless
-        }
-
-        MouseArea {
-            id: rightCenterGroup
-            anchors.verticalCenter: parent.verticalCenter
-            implicitWidth: rightCenterGroupContent.implicitWidth
-            implicitHeight: rightCenterGroupContent.implicitHeight
-
-            onPressed: {
-                GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
+            anchors {
+                centerIn: parent
             }
 
+            spacing: 10
+
+            // RESOURCE / MEDIA --------------------------------------------
             BarGroup {
-                id: rightCenterGroupContent
-                anchors.centerIn: parent
-                padding: workspacesWidget.widgetPadding
+                id: resourceMediaGroup
 
-                Workspaces {
-                    id: workspacesWidget
-                    Layout.fillHeight: true
+                drawBackground: false
+                padding: 8
 
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.RightButton
+                Resources {
+                    alwaysShowAllResources: root.useShortenedForm === 2
+                    Layout.fillWidth: root.useShortenedForm === 2
+                }
 
-                        onPressed: event => {
-                            if (event.button === Qt.RightButton) {
-                                GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
+                Media {
+                    visible: root.useShortenedForm < 2
+                    Layout.fillWidth: true
+                }
+            }
+
+            // CLOCK --------------------------------------------------------
+            BarGroup {
+                id: clockGroup
+
+                drawBackground: false
+                padding: 8
+
+                ClockWidget {
+                    showDate: (Config.options.bar.verbose && root.useShortenedForm < 2)
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillWidth: true
+                }
+            }
+
+            // WORKSPACES / BUTTONS / BATTERY ------------------------------
+            MouseArea {
+                id: workspaceGroupArea
+
+                anchors.verticalCenter: parent.verticalCenter
+
+                implicitWidth: workspaceGroup.implicitWidth
+                implicitHeight: workspaceGroup.implicitHeight
+
+                onPressed: {
+                    GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
+                }
+
+                BarGroup {
+                    id: workspaceGroup
+
+                    drawBackground: false
+                    anchors.centerIn: parent
+                    padding: workspacesWidget.widgetPadding
+
+                    Workspaces {
+                        id: workspacesWidget
+
+                        Layout.fillHeight: true
+
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.RightButton
+
+                            onPressed: event => {
+                                if (event.button === Qt.RightButton)
+                                    GlobalStates.overviewOpen = !GlobalStates.overviewOpen;
                             }
                         }
                     }
-                }
 
-                UtilButtons {
-                    visible: (Config.options.bar.verbose && root.useShortenedForm === 0)
-                    Layout.alignment: Qt.AlignVCenter
-                }
+                    UtilButtons {
+                        visible: (Config.options.bar.verbose && root.useShortenedForm === 0)
+                        Layout.alignment: Qt.AlignVCenter
+                    }
 
-                BatteryIndicator {
-                    visible: (root.useShortenedForm < 2 && Battery.available)
-                    Layout.alignment: Qt.AlignVCenter
+                    BatteryIndicator {
+                        visible: (root.useShortenedForm < 2 && Battery.available)
+                        Layout.alignment: Qt.AlignVCenter
+                    }
                 }
             }
         }
     }
 
-    FocusedScrollMouseArea { // Right side | scroll to change volume
+    // RIGHT GROUP ----------------------------------------------------------
+    FocusedScrollMouseArea {
         id: barRightSideMouseArea
 
         anchors {
@@ -196,19 +216,19 @@ Item { // Bar content region
             left: middleSection.right
             right: parent.right
         }
-        implicitWidth: rightSectionRowLayout.implicitWidth
+
+        implicitWidth: rightGroup.implicitWidth + 32
         implicitHeight: Appearance.sizes.baseBarHeight
 
-        onScrollDown: Audio.decrementVolume();
-        onScrollUp: Audio.incrementVolume();
-        onMovedAway: GlobalStates.osdVolumeOpen = false;
+        onScrollDown: Audio.decrementVolume()
+        onScrollUp: Audio.incrementVolume()
+        onMovedAway: GlobalStates.osdVolumeOpen = false
+
         onPressed: event => {
-            if (event.button === Qt.LeftButton) {
+            if (event.button === Qt.LeftButton)
                 GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
-            }
         }
 
-        // Visual content
         ScrollHint {
             reveal: barRightSideMouseArea.hovered
             icon: "volume_up"
@@ -220,118 +240,144 @@ Item { // Bar content region
 
         RowLayout {
             id: rightSectionRowLayout
-            anchors.fill: parent
-            spacing: 5
+
+            anchors {
+                right: parent.right
+                rightMargin: 12
+                verticalCenter: parent.verticalCenter
+            }
+
+            spacing: 10
             layoutDirection: Qt.RightToLeft
 
-            RippleButton { // Right sidebar button
-                id: rightSidebarButton
+            BarGroup {
+                id: rightGroup
 
-                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                Layout.rightMargin: Appearance.rounding.screenRounding
-                Layout.fillWidth: false
+                padding: 8
 
-                implicitWidth: indicatorsRowLayout.implicitWidth + 10 * 2
-                implicitHeight: indicatorsRowLayout.implicitHeight + 5 * 2
-
-                buttonRadius: Appearance.rounding.full
-                colBackground: barRightSideMouseArea.hovered ? Appearance.colors.colLayer1Hover : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
-                colBackgroundHover: Appearance.colors.colLayer1Hover
-                colRipple: Appearance.colors.colLayer1Active
-                colBackgroundToggled: Appearance.colors.colSecondaryContainer
-                colBackgroundToggledHover: Appearance.colors.colSecondaryContainerHover
-                colRippleToggled: Appearance.colors.colSecondaryContainerActive
-                toggled: GlobalStates.sidebarRightOpen
-                property color colText: toggled ? Appearance.m3colors.m3onSecondaryContainer : Appearance.colors.colOnLayer0
-
-                Behavior on colText {
-                    animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
+                SysTray {
+                    visible: root.useShortenedForm === 0
+                    Layout.fillWidth: false
+                    Layout.fillHeight: true
+                    invertSide: Config?.options.bar.bottom
                 }
 
-                onPressed: {
-                    GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
-                }
+                RippleButton {
+                    id: rightSidebarButton
 
-                RowLayout {
-                    id: indicatorsRowLayout
-                    anchors.centerIn: parent
-                    property real realSpacing: 15
-                    spacing: 0
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillWidth: false
 
-                    Revealer {
-                        reveal: Audio.sink?.audio?.muted ?? false
-                        Layout.fillHeight: true
-                        Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
-                        Behavior on Layout.rightMargin {
-                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                    implicitWidth: indicatorsRowLayout.implicitWidth + 16
+                    implicitHeight: indicatorsRowLayout.implicitHeight + 10
+
+                    buttonRadius: Appearance.rounding.full
+
+                    colBackground: barRightSideMouseArea.hovered
+                    ? Appearance.colors.colLayer1Hover
+                    : ColorUtils.transparentize(Appearance.colors.colLayer1Hover, 1)
+
+                    colBackgroundHover: Appearance.colors.colLayer1Hover
+                    colRipple: Appearance.colors.colLayer1Active
+                    colBackgroundToggled: Appearance.colors.colPrimary
+                    colBackgroundToggledHover: Appearance.colors.colPrimaryHover
+                    colRippleToggled: Appearance.colors.colPrimaryActive
+
+                    toggled: GlobalStates.sidebarRightOpen
+
+                    property color colText: toggled
+                    ? Appearance.colors.colOnPrimary
+                    : Appearance.colors.colOnLayer0
+
+                    Behavior on colText {
+                        animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
+                    }
+
+                    onPressed: GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen
+
+                    RowLayout {
+                        id: indicatorsRowLayout
+
+                        anchors.centerIn: parent
+
+                        property real realSpacing: 12
+
+                        spacing: 0
+
+                        Revealer {
+                            reveal: Audio.sink?.audio?.muted ?? false
+                            Layout.fillHeight: true
+                            Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+
+                            MaterialSymbol {
+                                text: "volume_off"
+                                iconSize: Appearance.font.pixelSize.larger
+                                color: rightSidebarButton.colText
+                            }
                         }
+
+                        Revealer {
+                            reveal: Audio.source?.audio?.muted ?? false
+                            Layout.fillHeight: true
+                            Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+
+                            MaterialSymbol {
+                                text: "mic_off"
+                                iconSize: Appearance.font.pixelSize.larger
+                                color: rightSidebarButton.colText
+                            }
+                        }
+
+                        HyprlandXkbIndicator {
+                            Layout.alignment: Qt.AlignVCenter
+                            Layout.rightMargin: indicatorsRowLayout.realSpacing
+                            color: rightSidebarButton.colText
+                        }
+
+                        Revealer {
+                            reveal: Notifications.silent || Notifications.unread > 0
+                            Layout.fillHeight: true
+                            Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
+
+                            implicitHeight: reveal
+                            ? notificationUnreadCount.implicitHeight
+                            : 0
+
+                            implicitWidth: reveal
+                            ? notificationUnreadCount.implicitWidth
+                            : 0
+
+                            NotificationUnreadCount {
+                                id: notificationUnreadCount
+                            }
+                        }
+
                         MaterialSymbol {
-                            text: "volume_off"
+                            text: Network.materialSymbol
+                            iconSize: Appearance.font.pixelSize.larger
+                            color: rightSidebarButton.colText
+                        }
+
+                        MaterialSymbol {
+                            Layout.leftMargin: indicatorsRowLayout.realSpacing
+
+                            visible: BluetoothStatus.available
+
+                            text: BluetoothStatus.connected
+                            ? "bluetooth_connected"
+                            : BluetoothStatus.enabled
+                            ? "bluetooth"
+                            : "bluetooth_disabled"
+
                             iconSize: Appearance.font.pixelSize.larger
                             color: rightSidebarButton.colText
                         }
                     }
-                    Revealer {
-                        reveal: Audio.source?.audio?.muted ?? false
-                        Layout.fillHeight: true
-                        Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
-                        Behavior on Layout.rightMargin {
-                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
-                        }
-                        MaterialSymbol {
-                            text: "mic_off"
-                            iconSize: Appearance.font.pixelSize.larger
-                            color: rightSidebarButton.colText
-                        }
-                    }
-                    HyprlandXkbIndicator {
-                        Layout.alignment: Qt.AlignVCenter
-                        Layout.rightMargin: indicatorsRowLayout.realSpacing
-                        color: rightSidebarButton.colText
-                    }
-                    Revealer {
-                        reveal: Notifications.silent || Notifications.unread > 0
-                        Layout.fillHeight: true
-                        Layout.rightMargin: reveal ? indicatorsRowLayout.realSpacing : 0
-                        implicitHeight: reveal ? notificationUnreadCount.implicitHeight : 0
-                        implicitWidth: reveal ? notificationUnreadCount.implicitWidth : 0
-                        Behavior on Layout.rightMargin {
-                            animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
-                        }
-                        NotificationUnreadCount {
-                            id: notificationUnreadCount
-                        }
-                    }
-                    MaterialSymbol {
-                        text: Network.materialSymbol
-                        iconSize: Appearance.font.pixelSize.larger
-                        color: rightSidebarButton.colText
-                    }
-                    MaterialSymbol {
-                        Layout.leftMargin: indicatorsRowLayout.realSpacing
-                        visible: BluetoothStatus.available
-                        text: BluetoothStatus.connected ? "bluetooth_connected" : BluetoothStatus.enabled ? "bluetooth" : "bluetooth_disabled"
-                        iconSize: Appearance.font.pixelSize.larger
-                        color: rightSidebarButton.colText
-                    }
                 }
             }
 
-            SysTray {
-                visible: root.useShortenedForm === 0
-                Layout.fillWidth: false
-                Layout.fillHeight: true
-                invertSide: Config?.options.bar.bottom
-            }
-
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
-
-            // Weather
+            // Optional modules get their own surface.
             Loader {
-                Layout.leftMargin: 4
                 active: Config.options.bar.weather.enable
 
                 sourceComponent: BarGroup {

@@ -67,7 +67,6 @@ in {
   };
   wayland.windowManager.hyprland = {
     enable = true;
-#     configType = "hyprlang";
     configType = "lua";
     package = pkgs.hyprland;
     extraLuaFiles = {

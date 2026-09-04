@@ -96,7 +96,7 @@ ButtonMouseArea {
             id: occupiedIndicatorsBg
             anchors.fill: parent
             contentLayer: StyledRectangle.ContentLayer.Group
-            color: ColorUtils.transparentize(Appearance.m3colors.m3secondaryContainer, 0.4)
+            color: ColorUtils.transparentize(Appearance.colors.colOnLayer0, 0.9)
             visible: false
         }
 
@@ -256,7 +256,7 @@ ButtonMouseArea {
                         sourceComponent: Colorizer {
                             implicitWidth: appIcon.implicitWidth
                             implicitHeight: appIcon.implicitHeight
-                            colorizationColor: Appearance.m3colors.darkmode ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnPrimary
+                            colorizationColor: Appearance.colors.colOnLayer0
                             colorization: Config.options.bar.workspaces.monochromeIcons ? 0.8 : 0.5
                             brightness: 0
                             source: appIcon
