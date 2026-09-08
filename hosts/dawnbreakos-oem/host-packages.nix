@@ -23,13 +23,18 @@
         openssl
       ];
     })
-    osu-lazer
+    cargo 
+    rustc 
+    rustfmt 
+    pre-commit 
+    rustPackages.clippy
   ];
   # Add host specific flatpaks here
   services = {
     flatpak = {
       packages = [
         "com.rtosta.zapzap"
+        "sh.ppy.osu"
       ];
     };
   };

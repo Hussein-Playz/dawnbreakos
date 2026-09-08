@@ -13,5 +13,8 @@
     }
 
     alias ndev="nix develop"
+
+
+    export PATH"=$PATH:$HOME/.cargo/bin"
   '';
 }

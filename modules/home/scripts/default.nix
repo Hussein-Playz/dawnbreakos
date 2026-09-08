@@ -44,7 +44,6 @@
         ".config/mimeapps.list.backup"
       ];
     })
-    (import ./dbb-mode.nix { inherit pkgs; })
   ];
 
   xdg.desktopEntries.dropterminal = {

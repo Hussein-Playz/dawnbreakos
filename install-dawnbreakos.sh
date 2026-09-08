@@ -24,22 +24,22 @@ exec > >(tee -a "$LOG_FILE") 2>&1
 # Function to print a section header
 print_header() {
   echo -e "${GREEN}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${GREEN}║ ${1} ${NC}"
+  echo -e "${GREEN}║ ${1}                                                                  ║${NC}"
   echo -e "${GREEN}╚═══════════════════════════════════════════════════════════════════════╝${NC}"
 }
 
 # Function to print a configuration summary
 print_summary() {
   echo -e "${CYAN}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${CYAN}║                 📋 Installation Configuration Summary                 ║${NC}"
+  echo -e "${CYAN}║                   Installation Configuration Summary                  ║${NC}"
   echo -e "${CYAN}╠═══════════════════════════════════════════════════════════════════════╣${NC}"
-  echo -e "${CYAN}║  🖥️  Hostname:        ${BLUE}${1}${NC}"
-  echo -e "${CYAN}║  🎮 GPU Profile:      ${BLUE}${2}${NC}"
-  echo -e "${CYAN}║  👤 System Username:  ${BLUE}${3}${NC}"
-  echo -e "${CYAN}║  🌐 Timezone:         ${BLUE}${4}${NC}"
-  echo -e "${CYAN}║  ⌨️  Keyboard Layout:  ${BLUE}${5}${NC}"
-  echo -e "${CYAN}║  ⌨️  Keyboard Variant: ${BLUE}${6:-none}${NC}"
-  echo -e "${CYAN}║  🖥️  Console Keymap:   ${BLUE}${7:-$5}${NC}"
+  echo -e "${CYAN}║   Hostname:        ${BLUE}${1}                                        ║${NC}"
+  echo -e "${CYAN}║   GPU Profile:      ${BLUE}${2}                                       ║${NC}"
+  echo -e "${CYAN}║   System Username:  ${BLUE}${3}                                       ║${NC}"
+  echo -e "${CYAN}║   Timezone:         ${BLUE}${4}                                       ║${NC}"
+  echo -e "${CYAN}║   Keyboard Layout:  ${BLUE}${5}                                       ║${NC}"
+  echo -e "${CYAN}║   Keyboard Variant: ${BLUE}${6:-none}                                 ║${NC}"
+  echo -e "${CYAN}║   Console Keymap:   ${BLUE}${7:-$5}                                   ║${NC}"
   echo -e "${CYAN}╚═══════════════════════════════════════════════════════════════════════╝${NC}"
 }
 
@@ -51,7 +51,7 @@ print_error() {
 # Function to print a success banner
 print_success_banner() {
   echo -e "${GREEN}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${GREEN}║                 DawnbreakOS Installation Successful!                      ║${NC}"
+  echo -e "${GREEN}║                 DawnbreakOS Installation Successful!                  ║${NC}"
   echo -e "${GREEN}║                                                                       ║${NC}"
   echo -e "${GREEN}║   Please reboot your system for changes to take full effect.          ║${NC}"
   echo -e "${GREEN}║                                                                       ║${NC}"
@@ -61,10 +61,10 @@ print_success_banner() {
 # Function to print a failure banner
 print_failure_banner() {
   echo -e "${RED}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
-  echo -e "${RED}║                 DawnbreakOS Installation Failed!                          ║${NC}"
+  echo -e "${RED}║                 DawnbreakOS Installation Failed!                      ║${NC}"
   echo -e "${RED}║                                                                       ║${NC}"
   echo -e "${RED}║   Please review the log file for details:                             ║${NC}"
-  echo -e "${RED}║   ${LOG_FILE}                                                        ║${NC}"
+  echo -e "${RED}║   ${LOG_FILE}                                                         ║${NC}"
   echo -e "${RED}║                                                                       ║${NC}"
   echo -e "${RED}╚═══════════════════════════════════════════════════════════════════════╝${NC}"
 }
@@ -457,7 +457,8 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   echo -e "${RED}Build cancelled.${NC}"
   exit 1
 fi
-
+mkdir -p ~/.config/illogical-impulse
+cp ~/dawnbreakos/illogical-impulse-config.json ~/.config/config.json
 sudo nixos-rebuild boot --flake ~/dawnbreakos/#${profile}
 
 # Check the exit status of the last command (nixos-rebuild)

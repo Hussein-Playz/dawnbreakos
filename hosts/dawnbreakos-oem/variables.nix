@@ -133,7 +133,7 @@
   # Set Stylix Image
   # This will set your color palette
   # Add new images to ~/dawnbreakos/wallpapers
-  stylixImage = ../../wallpapers/KonochanPaper.png;
+  stylixImage = ../../wallpapers/AstaPaper.png;
 
   # Set Animation style
   # Available options are:
