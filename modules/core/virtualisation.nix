@@ -22,7 +22,7 @@
   };
 
   programs = {
-    virt-manager.enable = true;
+    virt-manager.enable = false;
   };
 
   environment.systemPackages = with pkgs; [

@@ -13,21 +13,16 @@
     })
     kdePackages.konsole
     atlauncher
-    protonup-qt
+    #protonup-qt
     protontricks
     gnome-system-monitor
-    figma-linux
+    #figma-linux
     (pkgs.unityhub.override {
       extraLibs = pkgs: with pkgs; [
         sqlite
         openssl
       ];
     })
-    cargo 
-    rustc 
-    rustfmt 
-    pre-commit 
-    rustPackages.clippy
   ];
   # Add host specific flatpaks here
   services = {
@@ -38,15 +33,17 @@
       ];
     };
   };
-  services.auto-cpufreq.enable = false;
-  services.auto-cpufreq.settings = {
-    battery = {
-      governor = "powersave";
-      turbo = "never";
-    };
-    charger = {
-      governor = "performance";
-      turbo = "auto";
-    };
-  };
+#   services.auto-cpufreq.enable = false;
+#   services.auto-cpufreq.settings = {
+#     battery = {
+#       governor = "powersave";
+#       energy_performance_preference = "power";
+#       turbo = "never";
+#     };
+#     charger = {
+#       governor = "performance";
+#       energy_performance_preference = "performance";
+#       turbo = "auto";
+#     };
+#   };
 }

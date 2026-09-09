@@ -1,0 +1,5 @@
+{username, ...}: {
+  imports = [
+    ./services.nix
+  ];
+}
