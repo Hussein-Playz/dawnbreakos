@@ -29,7 +29,6 @@
     flatpak = {
       packages = [
         "com.rtosta.zapzap"
-        "sh.ppy.osu"
       ];
     };
   };
