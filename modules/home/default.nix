@@ -35,7 +35,6 @@ in {
       ./terminals/kitty.nix
       ./editors/nixvim.nix
       ./editors/nano.nix
-      ./rofi
       ./qt.nix
       ./scripts
       ./stylix.nix

@@ -4,26 +4,40 @@
   ...
 }: {
   environment.systemPackages = with pkgs; [
+    # Normal Usuage
     qbittorrent
-    jdk17
-    vscode
     kdePackages.kate
+    kdePackages.konsole
     (discord.override {
       withVencord = true;
     })
-    kdePackages.konsole
-    atlauncher
-    #protonup-qt
-    protontricks
     gnome-system-monitor
-    #figma-linux
+    # Development
+    jdk17
+    vscode
     (pkgs.unityhub.override {
       extraLibs = pkgs: with pkgs; [
         sqlite
         openssl
       ];
     })
+    #jetbrains.pycharm
+    #jetbrains.idea
+    #figma-linux
+    # Gaming
+    #protonup-qt
+    protontricks
+    # Uncategorized
+    icu
+    tree
   ];
+  programs.nix-ld = {
+  enable = true;
+    libraries = with pkgs; [
+      icu
+    ];
+  };
+
   # Add host specific flatpaks here
   services = {
     flatpak = {

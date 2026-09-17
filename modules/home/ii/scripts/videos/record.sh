@@ -7,11 +7,12 @@ CUSTOM_PATH=$(jq -r "$JSON_PATH" "$CONFIG_FILE" 2>/dev/null)
 
 RECORDING_DIR=""
 
-if [[ -n "$CUSTOM_PATH" ]]; then
-    RECORDING_DIR="$CUSTOM_PATH"
+if [[ -n "$CUSTOM_PATH" && "$CUSTOM_PATH" != "null" ]]; then
+    RECORDING_DIR="${CUSTOM_PATH/#\$HOME/$HOME}"
 else
-    RECORDING_DIR="$HOME/Videos" # Use default path
+    RECORDING_DIR="$HOME/Videos"
 fi
+
 
 getdate() {
     date '+%Y-%m-%d_%H.%M.%S'

@@ -137,9 +137,6 @@ in {
         hl.dsp.exec_cmd("nemo"),
         { description = "Apps: File Manager" })
 
-      hl.bind(modifier .. " + R",
-        hl.dsp.exec_cmd("\"/home/dawn/Desktop/Dawnbreak Launcher/atlauncher\""),
-        { description = "Apps: Dawnbreak Launcher" })
 
       hl.bind("CTRL + SHIFT + escape",
         hl.dsp.exec_cmd("gnome-system-monitor"),
@@ -155,10 +152,6 @@ in {
 
 
       --##! Utilities
-
-      hl.bind(modifier .. " + S",
-        hl.dsp.exec_cmd("screenshootin"),
-        { description = "Utilities: Screenshot" })
 
       hl.bind(modifier .. " + CTRL + S",
         hl.dsp.exec_cmd("hyprshot -m output -o $HOME/Pictures/ScreenShots"),

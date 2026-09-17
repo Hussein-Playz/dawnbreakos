@@ -104,5 +104,6 @@
             echo "'$1' is not a file"
         fi
     }
+    alias battery='upower -i "$(upower -e | grep BAT | head -n1)" | grep -E "energy-rate|time to empty|percentage|state"'
   '';
 }
