@@ -9,6 +9,8 @@
 import "modules/common"
 import "services"
 import "panelFamilies"
+import "caelestia"
+import "caelestia/modules/lock" as CaelestiaLock
 
 import QtQuick
 import QtQuick.Window
@@ -21,6 +23,19 @@ ShellRoot {
 
     // Stuff for every panel family
     ReloadPopup {}
+
+    // Caelestia-derived dashboard, integrated into this same II config.
+    DashboardHost { id: dashboardHost }
+
+    // Caelestia lock screen replaces the Illogical Impulse lock screen.
+    CaelestiaLock.Lock { id: caelestiaLock }
+
+    IpcHandler {
+        target: "dawnbreakDashboard"
+        function toggle(): void { dashboardHost.toggleFromShortcut() }
+        function open(): void { dashboardHost.opened = true; dashboardHost.shortcutActive = true }
+        function close(): void { dashboardHost.opened = false; dashboardHost.shortcutActive = false }
+    }
 
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()

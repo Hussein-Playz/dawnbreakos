@@ -4,6 +4,9 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.modules.common.functions
 import QtQuick
+import qs.caelestia.components as CaelestiaComponents
+import qs.caelestia.modules.session as CaelestiaSession
+import qs.caelestia.services as CaelestiaServices
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
@@ -64,7 +67,8 @@ Scope {
                 }
             }
 
-            ColumnLayout { // Content column
+            ColumnLayout { // Original II menu retained as a fallback
+                visible: false
                 id: contentColumn
                 anchors.centerIn: parent
                 spacing: 15
@@ -236,6 +240,49 @@ Scope {
                     Layout.alignment: Qt.AlignHCenter
                     text: sessionRoot.subtitle
                 }
+            }
+
+            CaelestiaComponents.ScreenState {
+                id: caelestiaSessionState
+                modelData: CaelestiaServices.Screens.screens.find(s => s.name === Hyprland.focusedMonitor?.name) ?? CaelestiaServices.Screens.screens[0]
+                Component.onCompleted: session = GlobalStates.sessionOpen
+            }
+
+            Connections {
+                target: GlobalStates
+                function onSessionOpenChanged() {
+                    if (caelestiaSessionState.session !== GlobalStates.sessionOpen)
+                        caelestiaSessionState.session = GlobalStates.sessionOpen;
+                }
+            }
+
+            Connections {
+                target: caelestiaSessionState
+                function onSessionChanged() {
+                    if (GlobalStates.sessionOpen !== caelestiaSessionState.session)
+                        GlobalStates.sessionOpen = caelestiaSessionState.session;
+                }
+            }
+
+            Rectangle {
+                id: caelestiaSessionBackdrop
+                z: 1
+                anchors.right: caelestiaSessionMenu.right
+                anchors.verticalCenter: caelestiaSessionMenu.verticalCenter
+                width: caelestiaSessionMenu.width + 32
+                height: caelestiaSessionMenu.height + 32
+                radius: 28
+                color: CaelestiaServices.Colours.tPalette.m3surface
+                visible: caelestiaSessionMenu.visible
+            }
+
+            CaelestiaSession.Wrapper {
+                id: caelestiaSessionMenu
+                z: 2
+                screenState: caelestiaSessionState
+                sidebarVisible: false
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
             }
 
             ColumnLayout {

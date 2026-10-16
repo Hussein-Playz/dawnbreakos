@@ -13,7 +13,7 @@
       font_family = "Maple Mono NF";
       font_size = 12;
       wheel_scroll_min_lines = 1;
-      window_padding_width = 4;
+#       window_padding_width = 4;
       confirm_os_window_close = 0;
       scrollback_lines = 10000;
       enable_audio_bell = false;
@@ -119,9 +119,12 @@
         inactive_border_color   #6c7086
         bell_border_color       #f9e2af
 
+        window_border_width 0
+        draw_minimal_borders no
+
         # OS Window titlebar colors
-        wayland_titlebar_color system
-        macos_titlebar_color system
+        #wayland_titlebar_color system
+        #macos_titlebar_color system
 
         # Tab bar colors
         active_tab_foreground   #11111b
@@ -172,111 +175,11 @@
         color7  #bac2de
         color15 #a6adc8
 
+        # To make kitty be transparent
+        background_opacity 0
+        # Must place otherwise kitty will start maximized
+        remember_window_size no
 
     '';
   };
-
-  # Dedicated kitty config that layers background image settings on top of the main config
-  # Keep standard kitty.conf as-is; kitty-bg.conf only adds/overrides background-related options.
-  home.file."${config.xdg.configHome}/kitty/kitty-bg.conf".text = lib.mkForce ''
-    include ./kitty.conf
-    # Background image managed by wrapper via symlink
-    background_image  ${config.home.homeDirectory}/Pictures/current_image_kitty
-    background_image_layout scaled
-    background_tint 0.95
-    background_opacity 1.0
-    linux_display_server auto
-  '';
-
-  # Desktop entry for kitty-bg
-  home.file."${config.xdg.dataHome}/applications/kitty-bg.desktop".text = ''
-    [Desktop Entry]
-    Version=1.0
-    Type=Application
-    Name=Kitty with Background
-    Comment=Terminal emulator with random background image
-    Exec=kitty-bg
-    Icon=utilities-terminal
-    Terminal=false
-    Categories=System;TerminalEmulator;Utility;
-    Keywords=terminal;shell;prompt;
-  '';
-
-  # Wrapper to select a random wallpaper, update the symlink, and launch kitty with kitty-bg.conf
-  home.packages = [
-    (pkgs.writeShellScriptBin "kitty-bg" ''
-            #!/usr/bin/env bash
-            set -euo pipefail
-
-            # Defaults
-            SOURCE_DIR="$HOME/Pictures/Wallpapers"
-            LINK_PATH="$HOME/Pictures/current_image"
-            CONFIG_FILE="$HOME/.config/kitty/kitty-bg.conf"
-            LAUNCH=1
-            FOREGROUND=0
-
-            # Parse basic options (stop at first positional or --)
-            while [[ $# -gt 0 ]]; do
-              case "$1" in
-                -s|--source)
-                  [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
-                  SOURCE_DIR="$2"; shift 2;;
-                -l|--link)
-                  [[ $# -ge 2 ]] || { echo "Missing value for $1" >&2; exit 2; }
-                  LINK_PATH="$2"; shift 2;;
-                --no-launch)
-                  LAUNCH=0; shift;;
-                --foreground)
-                  FOREGROUND=1; shift;;
-                -h|--help)
-                  cat <<'EOF'
-      Usage: kitty-bg [options] [--] [kitty_args...]
-
-      Defaults: Launches kitty in the background with ~/.config/kitty/kitty-bg.conf
-
-      Options:
-        -s, --source DIR   Source directory of images (default: ~/Pictures/Wallpapers)
-        -l, --link PATH    Symlink path (default: ~/Pictures/current_image_kitty)
-            --no-launch    Only update symlink; do not launch kitty
-            --foreground   Run kitty in the foreground (default is background)
-        -h, --help         Show this help
-      EOF
-                  exit 0;;
-                --)
-                  shift; break;;
-                -*)
-                  echo "Unknown option: $1" >&2; exit 2;;
-                *)
-                  break;;
-              esac
-            done
-
-            # Validate source dir and choose a random image (no Bash arrays to avoid Nix string issues)
-            if [[ ! -d "$SOURCE_DIR" ]]; then
-              echo "Source directory not found: $SOURCE_DIR" >&2
-              exit 1
-            fi
-
-            CHOSEN="$(${pkgs.findutils}/bin/find -L "$SOURCE_DIR" -type f \
-              \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.bmp' -o -iname '*.gif' \) \
-              -print0 | ${pkgs.coreutils}/bin/shuf -z -n 1 | ${pkgs.coreutils}/bin/tr -d '\0')"
-            if [[ -z "$CHOSEN" ]]; then
-              echo "No images found in: $SOURCE_DIR" >&2
-              exit 1
-            fi
-
-            # Update symlink
-            mkdir -p "$(dirname "$LINK_PATH")"
-            ln -sfn "$CHOSEN" "$LINK_PATH"
-
-            # Launch kitty using the dedicated config (background by default)
-            if (( LAUNCH )); then
-              if (( FOREGROUND )); then
-                exec kitty --config "$CONFIG_FILE" "$@"
-              else
-                setsid -f kitty --config "$CONFIG_FILE" "$@" >/dev/null 2>&1 < /dev/null &
-              fi
-            fi
-    '')
-  ];
 }

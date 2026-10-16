@@ -32,7 +32,7 @@
     settings = {
       general = {
         lock_cmd = ''hyprctl dispatch 'hl.dsp.global("quickshell:lock")' & pidof qs quickshell hyprlock || hyprlock'';
-        before_sleep_cmd = "loginctl lock-session";
+        before_sleep_cmd = ''hyprctl dispatch 'hl.dsp.global("quickshell:lock")' '';
         after_sleep_cmd = ''hyprctl dispatch 'hl.dsp.global("quickshell:lockFocus")' '';
         inhibit_sleep = 3;
       };
@@ -40,7 +40,7 @@
       listener = [
         {
           timeout = 300;
-          on-timeout = "loginctl lock-session";
+          on-timeout = ''hyprctl dispatch 'hl.dsp.global("quickshell:lock")' '';
         }
         {
           timeout = 600;

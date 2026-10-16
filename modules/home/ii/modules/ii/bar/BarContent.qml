@@ -1,4 +1,3 @@
-import qs.modules.ii.bar.weather
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -124,24 +123,6 @@ Item { // Bar content region
 
             spacing: 10
 
-            // RESOURCE / MEDIA --------------------------------------------
-            BarGroup {
-                id: resourceMediaGroup
-
-                drawBackground: false
-                padding: 8
-
-                Resources {
-                    alwaysShowAllResources: root.useShortenedForm === 2
-                    Layout.fillWidth: root.useShortenedForm === 2
-                }
-
-                Media {
-                    visible: root.useShortenedForm < 2
-                    Layout.fillWidth: true
-                }
-            }
-
             // CLOCK --------------------------------------------------------
             BarGroup {
                 id: clockGroup
@@ -192,15 +173,15 @@ Item { // Bar content region
                         }
                     }
 
-                    UtilButtons {
-                        visible: (Config.options.bar.verbose && root.useShortenedForm === 0)
-                        Layout.alignment: Qt.AlignVCenter
-                    }
-
-                    BatteryIndicator {
-                        visible: (root.useShortenedForm < 2 && Battery.available)
-                        Layout.alignment: Qt.AlignVCenter
-                    }
+                    // UtilButtons {
+                    //     visible: (Config.options.bar.verbose && root.useShortenedForm === 0)
+                    //     Layout.alignment: Qt.AlignVCenter
+                    // }
+                    //
+                    // BatteryIndicator {
+                    //     visible: (root.useShortenedForm < 2 && Battery.available)
+                    //     Layout.alignment: Qt.AlignVCenter
+                    // }
                 }
             }
         }
@@ -373,15 +354,6 @@ Item { // Bar content region
                             color: rightSidebarButton.colText
                         }
                     }
-                }
-            }
-
-            // Optional modules get their own surface.
-            Loader {
-                active: Config.options.bar.weather.enable
-
-                sourceComponent: BarGroup {
-                    WeatherBar {}
                 }
             }
         }

@@ -449,6 +449,24 @@ in
         | ${pkgs.gawk}/bin/awk '/^Mem:/ {print $3 " / " $2}'
     }
 
+    get_disk() {
+      ${pkgs.coreutils}/bin/df -B1 -T / | \
+        ${pkgs.gawk}/bin/awk '
+          NR == 2 {
+            used = $3
+            available = $4
+            total = used + available
+            percent = (used / total) * 100
+
+            printf "%.2f GiB / %.2f GiB (%.0f%%) - %s",
+              used / 1024^3,
+              total / 1024^3,
+              percent,
+              $2
+          }
+        '
+    }
+
     get_uptime() {
       local uptime_seconds
       read -r uptime_seconds _ < /proc/uptime
@@ -479,6 +497,63 @@ in
       fi
     }
 
+    get_host_model() {
+      local product=""
+      local version=""
+
+      product="$(${pkgs.coreutils}/bin/cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null || true)"
+      version="$(${pkgs.coreutils}/bin/cat /sys/devices/virtual/dmi/id/product_version 2>/dev/null || true)"
+
+      if [[ -n "$version" && "$version" != "None" && "$version" != "System Product Name" ]]; then
+        printf "%s (%s)" "$version" "$product"
+      else
+        printf "%s" "$product"
+      fi
+    }
+
+    get_battery() {
+      local battery=""
+      local capacity=""
+      local status=""
+      local serial=""
+
+      for battery in /sys/class/power_supply/BAT*; do
+        [ -d "$battery" ] || continue
+
+        capacity="$(${pkgs.coreutils}/bin/cat "$battery/capacity" 2>/dev/null || echo '?')"
+        status="$(${pkgs.coreutils}/bin/cat "$battery/status" 2>/dev/null || echo 'Unknown')"
+        serial="$(${pkgs.coreutils}/bin/cat "$battery/serial_number" 2>/dev/null || true)"
+
+        case "$status" in
+          Charging|Full)
+            status="AC Connected"
+            ;;
+          Discharging)
+            status="Discharging"
+            ;;
+          Not\ charging)
+            status="Not charging"
+            ;;
+        esac
+
+        if [ -n "$serial" ]; then
+          printf "%s (%s): %s%% [%s]" \
+            "$(basename "$battery")" \
+            "$serial" \
+            "$capacity" \
+            "$status"
+        else
+          printf "%s: %s%% [%s]" \
+            "$(basename "$battery")" \
+            "$capacity" \
+            "$status"
+        fi
+
+        return
+      done
+
+      printf "No battery"
+    }
     # --- Main Logic ---
     PROFILE="$(get_flake_profile)"
     if [ -z "$PROFILE" ]; then
@@ -1026,8 +1101,17 @@ in
         get_memory \
           > "$FETCH_TMP/memory" &
 
+        get_disk \
+          > "$FETCH_TMP/disk" &
+
         get_uptime \
           > "$FETCH_TMP/uptime" &
+
+        get_host_model \
+          > "$FETCH_TMP/host_model" &
+
+        get_battery \
+          > "$FETCH_TMP/battery" &
 
         # ------------------------------------------------------------
         # Git information — one git process group
@@ -1068,7 +1152,10 @@ in
         FETCH_GPU="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/gpu")"
         FETCH_CPU="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/cpu")"
         FETCH_MEMORY="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/memory")"
+        FETCH_DISK="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/disk")"
         FETCH_UPTIME="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/uptime")"
+        FETCH_HOST_MODEL="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/host_model")"
+        FETCH_BATTERY="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/battery")"
 
         FETCH_GIT_STATUS="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/git_status")"
         FETCH_GIT_BRANCH="$(${pkgs.coreutils}/bin/cat "$FETCH_TMP/git_branch")"
@@ -1136,10 +1223,11 @@ in
           "''${LABEL_COLOR} ├   Kernel ''${RESET}''${VALUE_COLOR}$FETCH_KERNEL''${RESET}"
           "''${LABEL_COLOR} └   Hyprland ''${RESET}''${VALUE_COLOR}$FETCH_HYPRLAND''${RESET}"
 
-          "''${LABEL_COLOR}Host  ''${RESET}''${VALUE_COLOR}$FETCH_HOST''${RESET}"
+          "''${LABEL_COLOR}Host  ''${RESET}''${VALUE_COLOR}$FETCH_HOST_MODEL''${RESET}"
           "''${LABEL_COLOR} ├    ''${RESET}''${VALUE_COLOR}$FETCH_CPU''${RESET}"
           "''${LABEL_COLOR} ├ 󰢮   ''${RESET}''${VALUE_COLOR}$FETCH_GPU''${RESET}"
           "''${LABEL_COLOR} ├    ''${RESET}''${VALUE_COLOR}$FETCH_MEMORY''${RESET}"
+          "''${LABEL_COLOR} ├ 󰋊   ''${RESET}''${VALUE_COLOR}$FETCH_DISK''${RESET}"
           "''${LABEL_COLOR} └ 󰅐   ''${RESET}''${VALUE_COLOR}$FETCH_UPTIME''${RESET}"
 
           "''${GIT_LABEL_COLOR}Git  ''${RESET}$GIT_STATUS_TEXT"

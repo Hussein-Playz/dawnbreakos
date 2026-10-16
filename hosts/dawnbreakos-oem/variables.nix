@@ -5,7 +5,7 @@
 
   # Set Displau Manager
   # `tui` for Text login
-  # `sddm` for graphical GUI (default)
+  # `sddm` for graphical GUI
   # SDDM background is set with stylixImage
   displayManager = "sddm";
 
@@ -133,7 +133,7 @@
   # Set Stylix Image
   # This will set your color palette
   # Add new images to ~/dawnbreakos/wallpapers
-  stylixImage = ../../wallpapers/AstaPaper.png;
+  stylixImage = ../../wallpapers/LavisMoonOsuBackground.png;
 
   # Set Animation style
   # Available options are:

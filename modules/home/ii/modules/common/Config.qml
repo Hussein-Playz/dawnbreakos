@@ -183,12 +183,6 @@ Singleton {
                             property string text: ""
                         }
                     }
-                    property JsonObject weather: JsonObject {
-                        property bool enable: false
-                        property string placementStrategy: "free" // "free", "leastBusy", "mostBusy"
-                        property real x: 400
-                        property real y: 100
-                    }
                 }
                 property string wallpaperPath: ""
                 property string thumbnailPath: ""
@@ -246,13 +240,6 @@ Singleton {
                     property int showNumberDelay: 300 // milliseconds
                     property list<string> numberMap: ["1", "2"] // Characters to show instead of numbers on workspace indicator
                     property bool useNerdFont: false
-                }
-                property JsonObject weather: JsonObject {
-                    property bool enable: false
-                    property bool enableGPS: true // gps based location
-                    property string city: "" // When 'enableGPS' is false
-                    property bool useUSCS: false // Instead of metric (SI) units
-                    property int fetchInterval: 10 // minutes
                 }
                 property JsonObject indicators: JsonObject {
                     property JsonObject notifications: JsonObject {

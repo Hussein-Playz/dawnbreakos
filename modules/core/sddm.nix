@@ -86,6 +86,10 @@ in {
         };
       };
     };
+    autoLogin = {
+      enable = true;
+      user = "dawn";
+    };
   };
 
   # Ensure Wayland SDDM also sees XKB defaults

@@ -175,11 +175,18 @@ in {
             },
             decoration = {
                 blur = {
-                    enabled = true,
+                    enabled = false,
                     ignore_opacity = false,
                     new_optimizations = true,
                     passes = 3,
                     size = 5,
+                },
+                glow = {
+                    enabled = true,
+                    range = 35,
+                    render_power = 4,
+                    color = { colors = { "rgb(94, 53, 133)" }, angle = 45 },
+                    color_inactive = "rgba(00000000)",
                 },
                 shadow = {
                     color = "rgba(1a1a1aee)",

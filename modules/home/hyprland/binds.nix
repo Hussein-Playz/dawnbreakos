@@ -87,8 +87,8 @@ in {
         { description = "Quickshell: Cheatsheet" })
 
       hl.bind(modifier .. " + M",
-        hl.dsp.global("quickshell:mediaControlsToggle"),
-        { description = "Quickshell: Media Controls" })
+        hl.dsp.exec_cmd("qs -c ii ipc call dawnbreakDashboard toggle"),
+        { description = "Quickshell: Dashboard" })
 
       hl.bind(modifier .. " + G",
         hl.dsp.global("quickshell:overlayToggle"),

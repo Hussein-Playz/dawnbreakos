@@ -7,6 +7,14 @@
     gvfs.enable = true; # For Mounting USB & More
     tlp = {
       enable = true;
+
+      settings = {
+        CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+        PLATFORM_PROFILE_ON_AC = "powersave";
+        PLATFORM_PROFILE_ON_BAT = "powersave";
+      };
     };
 
     #power-profiles-daemon.enable = true;

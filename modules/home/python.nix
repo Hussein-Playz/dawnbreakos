@@ -10,10 +10,10 @@
   ];
 
   # Add pip configuration
-  home.file.".config/pip/pip.conf".text = ''
-    [global]
-    user = true
-  '';
+#   home.file.".config/pip/pip.conf".text = ''
+#     [global]
+#     user = true
+#   '';
 
   # Set environment variables for Python development
   home.sessionVariables = {

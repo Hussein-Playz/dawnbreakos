@@ -28,7 +28,8 @@ Scope {
     PanelLoader { component: Background {} }
     PanelLoader { component: Cheatsheet {} }
     PanelLoader { extraCondition: Config.options.dock.enable; component: Dock {} }
-    PanelLoader { component: Lock {} }
+    // Disabled: CaelestiaLock.Lock is now the active session lock.
+    PanelLoader { extraCondition: false; component: Lock {} }
     PanelLoader { component: MediaControls {} }
     PanelLoader { component: NotificationPopup {} }
     PanelLoader { component: OnScreenDisplay {} }

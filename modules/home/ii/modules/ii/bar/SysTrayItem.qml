@@ -38,6 +38,10 @@ MouseArea {
     }
     onEntered: {
         tooltip.text = TrayService.getTooltipForItem(root.item);
+        // Caelestia-style tray interaction: reveal an item's context menu on hover.
+        // Only items that actually provide a menu are affected.
+        if (root.item.hasMenu && !menu.active)
+            menu.open();
     }
 
     Loader {

@@ -474,6 +474,13 @@ _: {
           center = true,
           float = true,
       })
+      hl.window_rule({
+        match = {
+            class = "^kitty$",
+        },
+        border_size = 0,
+        --rounding = 0,
+       })
     '';
   };
 }

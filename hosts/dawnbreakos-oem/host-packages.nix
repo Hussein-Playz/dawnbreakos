@@ -8,6 +8,7 @@
     qbittorrent
     kdePackages.kate
     kdePackages.konsole
+    zapzap
     (discord.override {
       withVencord = true;
     })
@@ -21,8 +22,8 @@
         openssl
       ];
     })
-    #jetbrains.pycharm
-    #jetbrains.idea
+    jetbrains.pycharm
+    jetbrains.idea
     #figma-linux
     # Gaming
     #protonup-qt
@@ -30,6 +31,7 @@
     # Uncategorized
     icu
     tree
+    nss
   ];
   programs.nix-ld = {
   enable = true;
@@ -42,7 +44,7 @@
   services = {
     flatpak = {
       packages = [
-        "com.rtosta.zapzap"
+        #"com.rtosta.zapzap"
       ];
     };
   };

@@ -7,6 +7,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # QML shape components used by the Caelestia-derived dashboard.
+    m3shapes = {
+      url = "github:soramanew/m3shapes/32ad9ce328bb77ed349b40a3be10ee9ea610b8ab";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nvf.url = "github:notashelf/nvf";
     stylix.url = "github:danth/stylix/master";
     nix-flatpak.url = "github:gmodena/nix-flatpak?ref=latest";
