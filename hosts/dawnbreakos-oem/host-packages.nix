@@ -12,6 +12,8 @@
     (discord.override {
       withVencord = true;
     })
+    libreoffice-qt
+    hunspell
     gnome-system-monitor
     # Development
     jdk17
