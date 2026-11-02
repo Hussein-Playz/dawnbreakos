@@ -122,10 +122,6 @@
   # Enable Printing Support
   printEnable = false;
 
-  # Enable Thunar GUI File Manager
-  # Yazi is alternate File Manager
-  thunarEnable = false;
-
   # Themes and animation.
   # Only uncomment your selection
   # The others much be commented out.
@@ -133,7 +129,7 @@
   # Set Stylix Image
   # This will set your color palette
   # Add new images to ~/dawnbreakos/wallpapers
-  stylixImage = ../../wallpapers/KonochanPaper.png;
+  stylixImage = ../../wallpapers/LavisMoonOsuBackground.png;
 
   # Set Animation style
   # Available options are:

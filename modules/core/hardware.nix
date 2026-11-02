@@ -13,6 +13,9 @@
     opentabletdriver.enable = true;
     uinput.enable = true;
   };
+  boot = {
+    kernelModules = [ "uinput" ];
+    supportedFilesystems = [ "ntfs" ];
+  };
   local.hardware-clock.enable = false;
-  boot.kernelModules = [ "uinput" ];
 }

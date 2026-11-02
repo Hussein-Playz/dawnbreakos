@@ -116,16 +116,6 @@
   amdgpuID = "PCI:5:0:0";
   nvidiaID = "PCI:2@0:0:0";
 
-  # Enable NFS
-  enableNFS = false;
-
-  # Enable Printing Support
-  printEnable = false;
-
-  # Enable Thunar GUI File Manager
-  # Yazi is alternate File Manager
-  thunarEnable = false;
-
   # Themes and animation.
   # Only uncomment your selection
   # The others much be commented out.
