@@ -34,6 +34,8 @@
     icu
     tree
     nss
+    aircrack-ng
+    seclists
   ];
   programs.nix-ld = {
   enable = true;
