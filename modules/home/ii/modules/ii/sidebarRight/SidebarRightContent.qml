@@ -13,7 +13,6 @@ import qs.modules.ii.sidebarRight.quickToggles
 import qs.modules.ii.sidebarRight.quickToggles.classicStyle
 
 import qs.modules.ii.sidebarRight.bluetoothDevices
-import qs.modules.ii.sidebarRight.nightLight
 import qs.modules.ii.sidebarRight.volumeMixer
 import qs.modules.ii.sidebarRight.wifiNetworks
 
@@ -25,7 +24,6 @@ Item {
     property bool showAudioOutputDialog: false
     property bool showAudioInputDialog: false
     property bool showBluetoothDialog: false
-    property bool showNightLightDialog: false
     property bool showWifiDialog: false
     property bool editMode: false
 
@@ -75,24 +73,23 @@ Item {
                 id: slidersLoader
                 Layout.fillWidth: true
                 visible: active
-                active: {
-                    const configQuickSliders = Config.options.sidebar.quickSliders
-                    if (!configQuickSliders.enable) return false
-                    if (!configQuickSliders.showMic && !configQuickSliders.showVolume && !configQuickSliders.showBrightness) return false;
-                    return true;
-                }
+                active: true
                 sourceComponent: QuickSliders {}
             }
 
-            LoaderedQuickPanelImplementation {
-                styleName: "classic"
-                sourceComponent: ClassicQuickPanel {}
-            }
-
-            LoaderedQuickPanelImplementation {
-                styleName: "android"
-                sourceComponent: AndroidQuickPanel {
-                    editMode: root.editMode
+            Loader {
+                id: quickPanelLoader
+                Layout.alignment: item?.Layout.alignment ?? Qt.AlignHCenter
+                Layout.fillWidth: item?.Layout.fillWidth ?? false
+                active: true
+                visible: active
+                sourceComponent: AndroidQuickPanel { editMode: root.editMode }
+                Connections {
+                    target: quickPanelLoader.item
+                    function onOpenAudioOutputDialog() { root.showAudioOutputDialog = true; }
+                    function onOpenAudioInputDialog() { root.showAudioInputDialog = true; }
+                    function onOpenBluetoothDialog() { root.showBluetoothDialog = true; }
+                    function onOpenWifiDialog() { root.showWifiDialog = true; }
                 }
             }
 
@@ -138,10 +135,7 @@ Item {
         }
     }
 
-    ToggleDialog {
-        shownPropertyString: "showNightLightDialog"
-        dialog: NightLightDialog {}
-    }
+
 
     ToggleDialog {
         shownPropertyString: "showWifiDialog"
@@ -180,32 +174,7 @@ Item {
         }
     }
 
-    component LoaderedQuickPanelImplementation: Loader {
-        id: quickPanelImplLoader
-        required property string styleName
-        Layout.alignment: item?.Layout.alignment ?? Qt.AlignHCenter
-        Layout.fillWidth: item?.Layout.fillWidth ?? false
-        visible: active
-        active: Config.options.sidebar.quickToggles.style === styleName
-        Connections {
-            target: quickPanelImplLoader.item
-            function onOpenAudioOutputDialog() {
-                root.showAudioOutputDialog = true;
-            }
-            function onOpenAudioInputDialog() {
-                root.showAudioInputDialog = true;
-            }
-            function onOpenBluetoothDialog() {
-                root.showBluetoothDialog = true;
-            }
-            function onOpenNightLightDialog() {
-                root.showNightLightDialog = true;
-            }
-            function onOpenWifiDialog() {
-                root.showWifiDialog = true;
-            }
-        }
-    }
+
 
     component SystemButtonRow: Item {
         implicitHeight: Math.max(uptimeContainer.implicitHeight, systemButtonsRow.implicitHeight)
@@ -257,7 +226,7 @@ Item {
 
             QuickToggleButton {
                 toggled: root.editMode
-                visible: Config.options.sidebar.quickToggles.style === "android"
+                visible: true
                 buttonIcon: "edit"
                 onClicked: root.editMode = !root.editMode
                 StyledToolTip {

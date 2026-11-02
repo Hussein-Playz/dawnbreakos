@@ -12,7 +12,7 @@ Item {
     required property real mouseY
     required property color color
     required property color overlayColor
-    property bool showAimLines: Config.options.regionSelector.rect.showAimLines
+    property bool showAimLines: true
 
     property bool breathingBorderOnly: false
 

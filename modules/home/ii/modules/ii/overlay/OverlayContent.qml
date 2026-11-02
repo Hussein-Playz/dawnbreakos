@@ -19,7 +19,7 @@ Item {
         }
     }
 
-    property real initScale: Config.options.overlay.openingZoomAnimation ? 1.08 : 1.000001
+    property real initScale: 1.08
     scale: initScale
     Component.onCompleted: {
         scale = 1
@@ -32,7 +32,7 @@ Item {
         id: bg
         anchors.fill: parent
         color: Appearance.colors.colScrim
-        visible: Config.options.overlay.darkenScreen && opacity > 0
+        visible: opacity > 0
         opacity: (GlobalStates.overlayOpen && root.scale !== initScale) ? 1 : 0
         Behavior on opacity {
             animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)

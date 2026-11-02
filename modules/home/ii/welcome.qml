@@ -62,14 +62,14 @@ ApplicationWindow {
 
         Item {
             // Titlebar
-            visible: Config.options?.windows.showTitlebar
+            visible: true
             Layout.fillWidth: true
             implicitHeight: Math.max(welcomeText.implicitHeight, windowControlsRow.implicitHeight)
             StyledText {
                 id: welcomeText
                 anchors {
-                    left: Config.options.windows.centerTitle ? undefined : parent.left
-                    horizontalCenter: Config.options.windows.centerTitle ? parent.horizontalCenter : undefined
+                    left: true ? undefined : parent.left
+                    horizontalCenter: true ? parent.horizontalCenter : undefined
                     verticalCenter: parent.verticalCenter
                     leftMargin: 12
                 }
@@ -164,72 +164,7 @@ ApplicationWindow {
 
                 }
 
-                ContentSection {
-                    icon: "screenshot_monitor"
-                    title: Translation.tr("Bar")
 
-                    ConfigRow {
-                        ContentSubsection {
-                            title: Translation.tr("Bar position")
-                            ConfigSelectionArray {
-                                currentValue: (Config.options.bar.bottom ? 1 : 0) | (Config.options.bar.vertical ? 2 : 0)
-                                onSelected: newValue => {
-                                    Config.options.bar.bottom = (newValue & 1) !== 0;
-                                    Config.options.bar.vertical = (newValue & 2) !== 0;
-                                }
-                                options: [
-                                    {
-                                        displayName: Translation.tr("Top"),
-                                        icon: "arrow_upward",
-                                        value: 0 // bottom: false, vertical: false
-                                    },
-                                    {
-                                        displayName: Translation.tr("Left"),
-                                        icon: "arrow_back",
-                                        value: 2 // bottom: false, vertical: true
-                                    },
-                                    {
-                                        displayName: Translation.tr("Bottom"),
-                                        icon: "arrow_downward",
-                                        value: 1 // bottom: true, vertical: false
-                                    },
-                                    {
-                                        displayName: Translation.tr("Right"),
-                                        icon: "arrow_forward",
-                                        value: 3 // bottom: true, vertical: true
-                                    }
-                                ]
-                            }
-                        }
-                        ContentSubsection {
-                            title: Translation.tr("Bar style")
-
-                            ConfigSelectionArray {
-                                currentValue: Config.options.bar.cornerStyle
-                                onSelected: newValue => {
-                                    Config.options.bar.cornerStyle = newValue; // Update local copy
-                                }
-                                options: [
-                                    {
-                                        displayName: Translation.tr("Hug"),
-                                        icon: "line_curve",
-                                        value: 0
-                                    },
-                                    {
-                                        displayName: Translation.tr("Float"),
-                                        icon: "page_header",
-                                        value: 1
-                                    },
-                                    {
-                                        displayName: Translation.tr("Rect"),
-                                        icon: "toolbar",
-                                        value: 2
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                }
 
                 ContentSection {
                     icon: "format_paint"

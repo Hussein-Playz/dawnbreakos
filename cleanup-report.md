@@ -1,0 +1,1096 @@
+# DawnbreakOS cleanup report
+
+This report records the source-tree cleanup based on the uploaded DawnbreakOS archive and the active II JSON supplied in this conversation. The original archive itself was not overwritten.
+
+## Result summary
+
+- Original files: **1460**
+- Modified files: **80** (79 QML, 1 Nix)
+- Feature files deleted: **101** (99 QML; 2 feature-specific non-QML files)
+- Backup files deleted: **17**
+- New files: **3**
+- Active II JSON fields retained: **42**
+
+## Behavior and scope
+
+- Kept the Caelestia dashboard, Caelestia lock screen, Caelestia services (including weather), and `vendor/dawnbreak-plugin` byte-for-byte unchanged.
+- Kept the II top bar, workspace indicators, resource indicators, notification indicator, system tray, overview, launcher, sidebars, Android quick toggles, microphone slider, wallpaper selection, notifications, cheatsheet, region selector, screen recording, clipboard history, media controls, music recognition, search, Pomodoro, update notifications, conflict killer, and first-run experience.
+- Removed the II app dock and its `TaskbarApps` service. The separate overlay widget bar was retained; it is not the application dock.
+- Removed the old II lock implementation and keyring helper; the Caelestia lock remains the active lock implementation.
+- Removed the II background clock, on-screen keyboard, screen translator, Booru browser, TODO feature, II weather, Hyprsunset/night-light UI, EasyEffects, anti-flashbang, and unwanted quick-toggle delegates (Cloudflare WARP, Game Mode, Power Profiles, and OSK).
+- Retained the general `Translation.qml` service because it localizes shell UI strings; the user-facing translator and screen-translator features were removed.
+- Retained the hardware brightness service and brightness OSD for Fn keys. Removed only the sidebar brightness slider and Hyprsunset gamma indicator/controls. The volume slider was removed; the microphone slider remains.
+- Kept the right sidebar content loaded while closed and retained the Android quick-toggle style with the configured network, Bluetooth, idle inhibitor, dark mode, microphone, audio, and color-picker tiles.
+- Removed the unused Booru cache/state paths and TODO path from the II directory/persistence models. No user cache or personal data directories were deleted.
+- Removed the obsolete Settings pages (Bar, Background, Interface, Advanced); renamed Quick to Control Center; General now contains only Battery and Language; Services remains unchanged; About now identifies DawnbreakOS and links to its GitHub repository.
+
+## Active configuration reduction
+
+The new reduced configuration is `dawnbreakos-ii-config.json`. The live config location remains `~/.config/illogical-impulse/config.json` so existing scripts and the current runtime path are not broken. Copy the reduced file there when deploying.
+
+Retained JSON sections/fields:
+- `appearance.palette.type`, `appearance.transparency.enable`, and `appearance.wallpaperTheming` (the latter is still read by wallpaper/theme scripts).
+- `background.wallpaperPath` and `background.thumbnailPath`.
+- `battery.*`, `language.ui`, `time.format`.
+- `conflictKiller.*`, `launcher.pinnedApps`, `policies.weeb`.
+- `musicRecognition.*`, `networking.userAgent`, `resources.updateInterval`, `screenRecord.savePath`, `screenSnip.savePath`, and the retained `search` engine/prefix fields.
+- `sidebar.quickToggles.android.{columns,toggles}`, `tray.{invertPinnedItems,pinnedItems}`, `wallpaperSelector.useSystemFileDialog`, and `overlay.floatingImage.scale`.
+
+Values from the uploaded JSON that are no longer configurable are hardcoded in QML to preserve the current behavior. The old sample JSON inside the archive was left untouched because it is stale and is not the active config.
+`tray.invertPinnedItems` is set to **true** and is also enforced when an older active config is loaded, so tray icons are pinned by default.
+
+## Removed files
+
+### Feature files
+
+- `modules/home/ii/modules/common/models/gCloud/GCloudApi.qml`
+- `modules/home/ii/modules/common/models/gCloud/GCloudTranslate.qml`
+- `modules/home/ii/modules/common/models/gCloud/GCloudVision.qml`
+- `modules/home/ii/modules/common/models/gCloud/GCloudVisionResult.qml`
+- `modules/home/ii/modules/common/models/quickToggles/AntiFlashbangToggle.qml`
+- `modules/home/ii/modules/common/models/quickToggles/CloudflareWarpToggle.qml`
+- `modules/home/ii/modules/common/models/quickToggles/EasyEffectsToggle.qml`
+- `modules/home/ii/modules/common/models/quickToggles/GameModeToggle.qml`
+- `modules/home/ii/modules/common/models/quickToggles/NightLightToggle.qml`
+- `modules/home/ii/modules/common/models/quickToggles/OnScreenKeyboardToggle.qml`
+- `modules/home/ii/modules/common/models/quickToggles/PowerProfilesToggle.qml`
+- `modules/home/ii/modules/common/panels/lock/LockContext.qml`
+- `modules/home/ii/modules/common/panels/lock/LockScreen.qml`
+- `modules/home/ii/modules/common/panels/lock/pam/fprintd.conf`
+- `modules/home/ii/modules/ii/background/widgets/AbstractBackgroundWidget.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/ClockText.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/ClockWidget.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/CookieClock.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/CookieQuote.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/DigitalClock.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/HourHand.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/HourMarks.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/MinuteHand.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/SecondHand.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/TimeColumn.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/BubbleDate.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/DateIndicator.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/RectangleDate.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/RotatingDate.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/BigHourNumbers.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/Dots.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/Lines.qml`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/MinuteMarks.qml`
+- `modules/home/ii/modules/ii/bar/BatteryIndicator.qml`
+- `modules/home/ii/modules/ii/bar/BatteryPopup.qml`
+- `modules/home/ii/modules/ii/bar/CircleUtilButton.qml`
+- `modules/home/ii/modules/ii/bar/UtilButtons.qml`
+- `modules/home/ii/modules/ii/dock/Dock.qml`
+- `modules/home/ii/modules/ii/dock/DockAppButton.qml`
+- `modules/home/ii/modules/ii/dock/DockApps.qml`
+- `modules/home/ii/modules/ii/dock/DockButton.qml`
+- `modules/home/ii/modules/ii/dock/DockSeparator.qml`
+- `modules/home/ii/modules/ii/lock/Lock.qml`
+- `modules/home/ii/modules/ii/lock/LockSurface.qml`
+- `modules/home/ii/modules/ii/lock/PasswordChars.qml`
+- `modules/home/ii/modules/ii/onScreenDisplay/indicators/GammaIndicator.qml`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OnScreenKeyboard.qml`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OskContent.qml`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OskKey.qml`
+- `modules/home/ii/modules/ii/onScreenKeyboard/layouts.js`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTextOverlay.qml`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTranslator.qml`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTranslatorPanel.qml`
+- `modules/home/ii/modules/ii/sidebarLeft/Anime.qml`
+- `modules/home/ii/modules/ii/sidebarLeft/Translator.qml`
+- `modules/home/ii/modules/ii/sidebarLeft/anime/BooruImage.qml`
+- `modules/home/ii/modules/ii/sidebarLeft/anime/BooruResponse.qml`
+- `modules/home/ii/modules/ii/sidebarLeft/translator/LanguageSelectorButton.qml`
+- `modules/home/ii/modules/ii/sidebarLeft/translator/TextCanvas.qml`
+- `modules/home/ii/modules/ii/sidebarRight/nightLight/NightLightDialog.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/ClassicQuickPanel.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidAntiFlashbangToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidCloudflareWarpToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidEasyEffectsToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidGameModeToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidNightLightToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidOnScreenKeyboardToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidPowerProfileToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/BluetoothToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/CloudflareWarp.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/EasyEffectsToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/GameMode.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/IdleInhibitor.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/NetworkToggle.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/NightLight.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/QuickToggleButton.qml`
+- `modules/home/ii/modules/ii/sidebarRight/todo/TaskList.qml`
+- `modules/home/ii/modules/ii/sidebarRight/todo/TodoItemActionButton.qml`
+- `modules/home/ii/modules/ii/sidebarRight/todo/TodoWidget.qml`
+- `modules/home/ii/modules/ii/verticalBar/BatteryIndicator.qml`
+- `modules/home/ii/modules/ii/verticalBar/Resource.qml`
+- `modules/home/ii/modules/ii/verticalBar/Resources.qml`
+- `modules/home/ii/modules/ii/verticalBar/VerticalBar.qml`
+- `modules/home/ii/modules/ii/verticalBar/VerticalBarContent.qml`
+- `modules/home/ii/modules/ii/verticalBar/VerticalClockWidget.qml`
+- `modules/home/ii/modules/ii/verticalBar/VerticalMedia.qml`
+- `modules/home/ii/modules/settings/AdvancedConfig.qml`
+- `modules/home/ii/modules/settings/BackgroundConfig.qml`
+- `modules/home/ii/modules/settings/BarConfig.qml`
+- `modules/home/ii/modules/settings/InterfaceConfig.qml`
+- `modules/home/ii/modules/settings/QuickConfig.qml`
+- `modules/home/ii/services/Booru.qml`
+- `modules/home/ii/services/BooruResponseData.qml`
+- `modules/home/ii/services/EasyEffects.qml`
+- `modules/home/ii/services/GoogleCloud.qml`
+- `modules/home/ii/services/HyprlandAntiFlashbangShader.qml`
+- `modules/home/ii/services/Hyprsunset.qml`
+- `modules/home/ii/services/KeyringStorage.qml`
+- `modules/home/ii/services/TaskbarApps.qml`
+- `modules/home/ii/services/Todo.qml`
+- `modules/home/ii/services/Weather.qml`
+
+### Backup files (`~` and `.backup`)
+- `hosts/dawnbreakos-oem/home/hyprland/env.nix~`
+- `hosts/dawnbreakos-oem/home/zsh.nix~`
+- `hosts/dawnbreakos-oem/host-packages.nix~`
+- `hosts/dawnbreakos-oem/variables.nix~`
+- `hosts/default/home/zsh.nix~`
+- `modules/core/boot.nix~`
+- `modules/core/packages.nix~`
+- `modules/drivers/nvidia-drivers.nix~`
+- `modules/drivers/nvidia-prime-drivers.nix~`
+- `modules/home/default.nix~`
+- `modules/home/eza.nix~`
+- `modules/home/ii/caelestia/modules/lock/Fetch.qml~`
+- `modules/home/scripts/db-battery.nix~`
+- `modules/home/scripts/default.nix~`
+- `modules/home/scripts/ncli.nix~`
+- `modules/home/scripts/qs-wallpapers.nix.backup`
+- `modules/home/zsh/zshrc-personal.nix~`
+
+## Removed functions and methods
+
+- `modules/home/ii/modules/common/Config.qml`: `setNestedValue()`
+- `modules/home/ii/modules/common/models/gCloud/GCloudApi.qml`: `handleApiOutput()`, `resetState()`
+- `modules/home/ii/modules/common/models/gCloud/GCloudTranslate.qml`: `translateStrings()`
+- `modules/home/ii/modules/common/models/gCloud/GCloudVision.qml`: `annotateImage()`
+- `modules/home/ii/modules/common/models/gCloud/GCloudVisionResult.qml`: `initializeWithData()`
+- `modules/home/ii/modules/common/panels/lock/LockContext.qml`: `clearText()`, `reset()`, `resetClearTimer()`, `resetTargetAction()`, `stopFingerPam()`, `tryFingerUnlock()`, `tryUnlock()`
+- `modules/home/ii/modules/common/panels/lock/LockScreen.qml`: `activate()`, `focus()`, `initIfReady()`, `lock()`, `onReadyChanged()`, `onScreenLockedChanged()`, `unlockKeyring()`
+- `modules/home/ii/modules/ii/background/widgets/AbstractBackgroundWidget.qml`: `onReadyChanged()`, `refreshPlacementIfNeeded()`
+- `modules/home/ii/modules/ii/background/widgets/clock/CookieClock.qml`: `applyStyle()`
+- `modules/home/ii/modules/ii/bar/Bar.qml`: `onSuperDownChanged()`
+- `modules/home/ii/modules/ii/bar/BatteryPopup.qml`: `formatTime()`
+- `modules/home/ii/modules/ii/bar/ClockWidgetPopup.qml`: `getUpcomingTodos()`
+- `modules/home/ii/modules/ii/bar/LeftSidebarButton.qml`: `onResponseFinished()`, `onSidebarLeftOpenChanged()`
+- `modules/home/ii/modules/ii/dock/DockAppButton.qml`: `onApplicationsChanged()`
+- `modules/home/ii/modules/ii/dock/DockApps.qml`: `onButtonHoveredChanged()`, `onLastHoveredButtonChanged()`, `popupCenterXForButton()`
+- `modules/home/ii/modules/ii/lock/Lock.qml`: `onScreenLockedChanged()`
+- `modules/home/ii/modules/ii/lock/LockSurface.qml`: `forceFieldFocus()`, `onCurrentTextChanged()`, `onScreenUnlockFailedChanged()`, `onShouldReFocus()`
+- `modules/home/ii/modules/ii/onScreenDisplay/OnScreenDisplay.qml`: `onGammaChangeAttempt()`, `onSinkProtectionTriggered()`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OnScreenKeyboard.qml`: `close()`, `hide()`, `open()`, `toggle()`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OskKey.qml`: `onShiftModeChanged()`, `startWaiting()`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTextOverlay.qml`: `handleError()`, `onTokenReadyChanged()`, `reattemptAsNeeded()`, `showError()`, `translate()`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTranslator.qml`: `dismiss()`, `onScreenTranslatorOpenChanged()`, `translate()`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTranslatorPanel.qml`: `performTranslation()`, `submit()`
+- `modules/home/ii/modules/ii/sidebarLeft/Anime.qml`: `accept()`, `acceptSelectedTag()`, `acceptTag()`, `handleInput()`, `onResponsesChanged()`, `onRunningRequestsChanged()`, `onTagSuggestion()`
+- `modules/home/ii/modules/ii/sidebarLeft/Translator.qml`: `showLanguageSelectorDialog()`
+- `modules/home/ii/modules/ii/sidebarLeft/anime/BooruResponse.qml`: `onWidthChanged()`
+- `modules/home/ii/modules/ii/sidebarRight/SidebarRightContent.qml`: `onOpenNightLightDialog()`
+- `modules/home/ii/modules/ii/sidebarRight/todo/TodoWidget.qml`: `addTask()`
+- `modules/home/ii/modules/ii/verticalBar/VerticalBar.qml`: `close()`, `onSuperDownChanged()`, `open()`, `toggle()`
+- `modules/home/ii/modules/settings/BackgroundConfig.qml`: `stylePresent()`
+- `modules/home/ii/services/Audio.qml`: `onVolumeChanged()`
+- `modules/home/ii/services/Booru.qml`: `addSystemMessage()`, `clearResponses()`, `constructRequestUrl()`, `getWorkingImageSource()`, `makeRequest()`, `setProvider()`, `triggerTagSearch()`
+- `modules/home/ii/services/Brightness.qml`: `brightnessMultiplierForLightness()`, `onRawEvent()`, `setBrightnessMultiplier()`
+- `modules/home/ii/services/EasyEffects.qml`: `disable()`, `enable()`, `fetchActiveState()`, `fetchAvailability()`, `toggle()`
+- `modules/home/ii/services/GoogleCloud.qml`: `getToken()`, `load()`, `loadKeyIfPossible()`, `onDataChanged()`, `onLoadedChanged()`, `setKeyJson()`, `unready()`
+- `modules/home/ii/services/HyprlandAntiFlashbangShader.qml`: `cycle()`, `disable()`, `enable()`, `enableWeak()`, `toggle()`
+- `modules/home/ii/services/Hyprsunset.qml`: `disableTemperature()`, `enableTemperature()`, `ensureState()`, `fetchState()`, `inBetween()`, `load()`, `onColorTemperatureChanged()`, `reEvaluate()`, `setGamma()`, `startHyprsunset()`, `toggleTemperature()`
+- `modules/home/ii/services/KeyringStorage.qml`: `fetchKeyringData()`, `saveKeyringData()`, `setNestedField()`
+- `modules/home/ii/services/LauncherSearch.qml`: `containsUnsafeLink()`
+- `modules/home/ii/services/TaskbarApps.qml`: `isPinned()`, `togglePin()`
+- `modules/home/ii/services/Todo.qml`: `addItem()`, `addTask()`, `deleteItem()`, `markDone()`, `markUnfinished()`, `refresh()`
+- `modules/home/ii/services/Weather.qml`: `cacheCity()`, `fetchCityFromCoords()`, `fetchCoordsFromCity()`, `fetchWeatherData()`, `fixCityName()`, `formatTemp()`, `getWeatherCondition()`, `getWeatherIcon()`, `getWeatherUrl()`, `recordIpApiRateLimit()`, `reload()`, `request()`
+- `modules/home/ii/shell.qml`: `cycle()`, `cyclePanelFamily()`
+
+## Removed signals
+
+- `modules/home/ii/modules/common/models/gCloud/GCloudApi.qml`: `error`, `finished`
+- `modules/home/ii/modules/common/panels/lock/LockContext.qml`: `failed`, `shouldReFocus`, `unlocked`
+- `modules/home/ii/modules/ii/sidebarLeft/translator/TextCanvas.qml`: `inputTextChanged`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/AbstractQuickPanel.qml`: `openNightLightDialog`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidToggleDelegateChooser.qml`: `openNightLightDialog`
+- `modules/home/ii/services/Audio.qml`: `sinkProtectionTriggered`
+- `modules/home/ii/services/Booru.qml`: `responseFinished`, `tagSuggestion`
+- `modules/home/ii/services/Hyprsunset.qml`: `gammaChangeAttempt`
+- `modules/home/ii/services/KeyringStorage.qml`: `dataChanged`
+
+## Removed imports
+
+Imports below were removed from modified files or disappeared with deleted QML files. Entries are grouped by source file; this includes all file-local imports removed as part of deleting a QML file.
+
+- `modules/home/ii/modules/common/models/WorkspaceModel.qml`
+  - `qs.modules.common as C`
+- `modules/home/ii/modules/common/models/gCloud/GCloudApi.qml`
+  - `".."`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.utils`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/gCloud/GCloudTranslate.qml`
+  - `".."`
+  - `QtQuick`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.utils`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/gCloud/GCloudVision.qml`
+  - `".."`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.utils`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/gCloud/GCloudVisionResult.qml`
+  - `".."`
+  - `QtQuick`
+- `modules/home/ii/modules/common/models/quickToggles/AntiFlashbangToggle.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/quickToggles/CloudflareWarpToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/quickToggles/EasyEffectsToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/quickToggles/GameModeToggle.qml`
+  - `QtQuick`
+  - `Quickshell.Io`
+  - `qs.modules.common.models.hyprland`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/quickToggles/NightLightToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/quickToggles/OnScreenKeyboardToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/common/models/quickToggles/PowerProfilesToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Services.UPower`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/common/panels/lock/LockContext.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `Quickshell.Services.Pam`
+  - `qs`
+  - `qs.modules.common`
+- `modules/home/ii/modules/common/panels/lock/LockScreen.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `Quickshell.Wayland`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/Background.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick.Layouts`
+  - `qs.modules.common.functions as CF`
+  - `qs.modules.common.widgets.widgetCanvas`
+  - `qs.modules.ii.background.widgets`
+  - `qs.modules.ii.background.widgets.clock`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/AbstractBackgroundWidget.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets.widgetCanvas`
+- `modules/home/ii/modules/ii/background/widgets/clock/ClockText.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/background/widgets/clock/ClockWidget.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.common.widgets.widgetCanvas`
+  - `qs.modules.ii.background.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/CookieClock.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.background.widgets.clock.dateIndicator`
+  - `qs.modules.ii.background.widgets.clock.minuteMarks`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/CookieQuote.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/background/widgets/clock/DigitalClock.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/HourHand.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+- `modules/home/ii/modules/ii/background/widgets/clock/HourMarks.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/MinuteHand.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+- `modules/home/ii/modules/ii/background/widgets/clock/SecondHand.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/background/widgets/clock/TimeColumn.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/BubbleDate.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/DateIndicator.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/RectangleDate.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/dateIndicator/RotatingDate.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/BigHourNumbers.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/Dots.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/Lines.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/background/widgets/clock/minuteMarks/MinuteMarks.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/bar/Bar.qml`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/bar/BarContent.qml`
+  - `Quickshell.Services.UPower`
+- `modules/home/ii/modules/ii/bar/BatteryIndicator.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/bar/BatteryPopup.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/bar/CircleUtilButton.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/bar/LeftSidebarButton.qml`
+  - `qs.services`
+- `modules/home/ii/modules/ii/bar/SysTrayItem.qml`
+  - `Qt5Compat.GraphicalEffects`
+- `modules/home/ii/modules/ii/bar/UtilButtons.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Services.Pipewire`
+  - `Quickshell.Services.UPower`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/dock/Dock.qml`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Effects`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `Quickshell.Wayland`
+  - `Quickshell.Widgets`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/dock/DockAppButton.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Widgets`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.services`
+- `modules/home/ii/modules/ii/dock/DockApps.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Wayland`
+  - `Quickshell.Widgets`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/dock/DockButton.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/dock/DockSeparator.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+- `modules/home/ii/modules/ii/lock/Lock.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.panels.lock`
+  - `qs.services`
+- `modules/home/ii/modules/ii/lock/LockSurface.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Services.SystemTray`
+  - `Quickshell.Services.UPower`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.panels.lock`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.bar as Bar`
+  - `qs.services`
+- `modules/home/ii/modules/ii/lock/PasswordChars.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/onScreenDisplay/indicators/GammaIndicator.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `qs.modules.ii.onScreenDisplay`
+  - `qs.services`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OnScreenKeyboard.qml`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `Quickshell.Wayland`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OskContent.qml`
+  - `"layouts.js" as Layouts`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+- `modules/home/ii/modules/ii/onScreenKeyboard/OskKey.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/screenCorners/ScreenCorners.qml`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTextOverlay.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Effects`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.models.gCloud`
+  - `qs.modules.common.utils`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTranslator.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `qs`
+- `modules/home/ii/modules/ii/screenTranslator/ScreenTranslatorPanel.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Wayland`
+  - `qs.modules.common`
+  - `qs.modules.common.utils`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarLeft/Anime.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.sidebarLeft.anime`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarLeft/Translator.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.sidebarLeft.translator`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarLeft/anime/BooruImage.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQml`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.utils`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarLeft/anime/BooruResponse.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.sidebarLeft`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarLeft/translator/LanguageSelectorButton.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarLeft/translator/TextCanvas.qml`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/BottomWidgetGroup.qml`
+  - `qs.modules.ii.sidebarRight.todo`
+- `modules/home/ii/modules/ii/sidebarRight/QuickSliders.qml`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Services.UPower`
+  - `qs`
+- `modules/home/ii/modules/ii/sidebarRight/SidebarRightContent.qml`
+  - `qs.modules.ii.sidebarRight.nightLight`
+  - `qs.modules.ii.sidebarRight.quickToggles.classicStyle`
+- `modules/home/ii/modules/ii/sidebarRight/nightLight/NightLightDialog.qml`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `Quickshell.Wayland`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/ClassicQuickPanel.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell.Bluetooth`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.sidebarRight.quickToggles.classicStyle`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidAntiFlashbangToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs.modules.common`
+  - `qs.modules.common.models.quickToggles`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidCloudflareWarpToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.models.quickToggles`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidEasyEffectsToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common.models.quickToggles`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidGameModeToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.models.quickToggles`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidNightLightToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs.modules.common`
+  - `qs.modules.common.models.quickToggles`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidOnScreenKeyboardToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.models.quickToggles`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidPowerProfileToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Services.UPower`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.models.quickToggles`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/BluetoothToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Bluetooth`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/CloudflareWarp.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/EasyEffectsToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `qs`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/GameMode.qml`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/IdleInhibitor.qml`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/NetworkToggle.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.sidebarRight.quickToggles`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/NightLight.qml`
+  - `QtQuick`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/classicStyle/QuickToggleButton.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/sidebarRight/todo/TaskList.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/sidebarRight/todo/TodoItemActionButton.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/sidebarRight/todo/TodoWidget.qml`
+  - `QtQuick`
+  - `QtQuick.Controls`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/verticalBar/BatteryIndicator.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.bar as Bar`
+  - `qs.services`
+- `modules/home/ii/modules/ii/verticalBar/Resource.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+- `modules/home/ii/modules/ii/verticalBar/Resources.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.ii.bar as Bar`
+  - `qs.services`
+- `modules/home/ii/modules/ii/verticalBar/VerticalBar.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `Quickshell.Services.UPower`
+  - `Quickshell.Wayland`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/ii/verticalBar/VerticalBarContent.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Bluetooth`
+  - `Quickshell.Services.UPower`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.bar as Bar`
+  - `qs.services`
+- `modules/home/ii/modules/ii/verticalBar/VerticalClockWidget.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.bar as Bar`
+  - `qs.services`
+- `modules/home/ii/modules/ii/verticalBar/VerticalMedia.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell.Services.Mpris`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.modules.ii.bar as Bar`
+  - `qs.services`
+- `modules/home/ii/modules/settings/AdvancedConfig.qml`
+  - `QtQuick`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/settings/BackgroundConfig.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/settings/BarConfig.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/settings/GeneralConfig.qml`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common.functions`
+- `modules/home/ii/modules/settings/InterfaceConfig.qml`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `qs.modules.common`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/modules/settings/QuickConfig.qml`
+  - `Qt5Compat.GraphicalEffects`
+  - `QtQuick`
+  - `QtQuick.Layouts`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+  - `qs.modules.common.widgets`
+  - `qs.services`
+- `modules/home/ii/panelFamilies/IllogicalImpulseFamily.qml`
+  - `qs.modules.ii.dock`
+  - `qs.modules.ii.lock`
+  - `qs.modules.ii.onScreenKeyboard`
+  - `qs.modules.ii.screenTranslator`
+  - `qs.modules.ii.verticalBar`
+- `modules/home/ii/services/Booru.qml`
+  - `QtQuick;`
+  - `Quickshell;`
+  - `qs.modules.common`
+  - `qs.services`
+- `modules/home/ii/services/BooruResponseData.qml`
+  - `QtQuick;`
+  - `qs.modules.common`
+- `modules/home/ii/services/EasyEffects.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+  - `Quickshell.Services.Pipewire`
+  - `qs.modules.common`
+- `modules/home/ii/services/GoogleCloud.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs.modules.common.utils`
+- `modules/home/ii/services/HyprlandAntiFlashbangShader.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `qs.modules.common.models.hyprland`
+- `modules/home/ii/services/Hyprsunset.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+  - `qs.modules.common`
+- `modules/home/ii/services/KeyringStorage.qml`
+  - `QtQuick;`
+  - `Quickshell.Io;`
+  - `Quickshell;`
+  - `qs`
+  - `qs.modules.common`
+  - `qs.modules.common.functions`
+- `modules/home/ii/services/TaskbarApps.qml`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Wayland`
+  - `qs.modules.common`
+- `modules/home/ii/services/Todo.qml`
+  - `QtQuick;`
+  - `Quickshell.Io;`
+  - `Quickshell;`
+  - `qs.modules.common`
+- `modules/home/ii/services/Weather.qml`
+  - `QtCore`
+  - `QtQuick`
+  - `Quickshell`
+  - `Quickshell.Io`
+- `modules/home/ii/shell.qml`
+  - `QtQuick.Window`
+  - `Quickshell.Hyprland`
+  - `Quickshell.Io`
+
+## Modified files
+
+- `modules/home/hyprland/binds.nix`
+- `modules/home/ii/GlobalStates.qml`
+- `modules/home/ii/killDialog.qml`
+- `modules/home/ii/modules/common/Appearance.qml`
+- `modules/home/ii/modules/common/Config.qml`
+- `modules/home/ii/modules/common/Directories.qml`
+- `modules/home/ii/modules/common/Persistent.qml`
+- `modules/home/ii/modules/common/functions/Session.qml`
+- `modules/home/ii/modules/common/models/WorkspaceModel.qml`
+- `modules/home/ii/modules/common/utils/ScreenshotAction.qml`
+- `modules/home/ii/modules/common/widgets/StyledFlickable.qml`
+- `modules/home/ii/modules/common/widgets/StyledListView.qml`
+- `modules/home/ii/modules/ii/background/Background.qml`
+- `modules/home/ii/modules/ii/bar/Bar.qml`
+- `modules/home/ii/modules/ii/bar/BarContent.qml`
+- `modules/home/ii/modules/ii/bar/BarGroup.qml`
+- `modules/home/ii/modules/ii/bar/ClockWidget.qml`
+- `modules/home/ii/modules/ii/bar/ClockWidgetPopup.qml`
+- `modules/home/ii/modules/ii/bar/HyprlandXkbIndicator.qml`
+- `modules/home/ii/modules/ii/bar/LeftSidebarButton.qml`
+- `modules/home/ii/modules/ii/bar/Media.qml`
+- `modules/home/ii/modules/ii/bar/NotificationUnreadCount.qml`
+- `modules/home/ii/modules/ii/bar/Resources.qml`
+- `modules/home/ii/modules/ii/bar/StyledPopup.qml`
+- `modules/home/ii/modules/ii/bar/SysTray.qml`
+- `modules/home/ii/modules/ii/bar/SysTrayItem.qml`
+- `modules/home/ii/modules/ii/bar/SysTrayMenu.qml`
+- `modules/home/ii/modules/ii/bar/Workspaces.qml`
+- `modules/home/ii/modules/ii/cheatsheet/CheatsheetKeybindsCategory.qml`
+- `modules/home/ii/modules/ii/mediaControls/MediaControls.qml`
+- `modules/home/ii/modules/ii/notificationPopup/NotificationPopup.qml`
+- `modules/home/ii/modules/ii/onScreenDisplay/OnScreenDisplay.qml`
+- `modules/home/ii/modules/ii/onScreenDisplay/indicators/BrightnessIndicator.qml`
+- `modules/home/ii/modules/ii/overlay/OverlayContent.qml`
+- `modules/home/ii/modules/ii/overlay/StyledOverlayWidget.qml`
+- `modules/home/ii/modules/ii/overlay/crosshair/CrosshairContent.qml`
+- `modules/home/ii/modules/ii/overlay/floatingImage/FloatingImage.qml`
+- `modules/home/ii/modules/ii/overview/Overview.qml`
+- `modules/home/ii/modules/ii/overview/OverviewWidget.qml`
+- `modules/home/ii/modules/ii/overview/OverviewWindow.qml`
+- `modules/home/ii/modules/ii/overview/SearchBar.qml`
+- `modules/home/ii/modules/ii/overview/SearchWidget.qml`
+- `modules/home/ii/modules/ii/regionSelector/CircleSelectionDetails.qml`
+- `modules/home/ii/modules/ii/regionSelector/RectCornersSelectionDetails.qml`
+- `modules/home/ii/modules/ii/regionSelector/RegionSelection.qml`
+- `modules/home/ii/modules/ii/regionSelector/RegionSelector.qml`
+- `modules/home/ii/modules/ii/regionSelector/TargetRegion.qml`
+- `modules/home/ii/modules/ii/screenCorners/ScreenCorners.qml`
+- `modules/home/ii/modules/ii/sidebarLeft/SidebarLeftContent.qml`
+- `modules/home/ii/modules/ii/sidebarRight/BottomWidgetGroup.qml`
+- `modules/home/ii/modules/ii/sidebarRight/QuickSliders.qml`
+- `modules/home/ii/modules/ii/sidebarRight/SidebarRight.qml`
+- `modules/home/ii/modules/ii/sidebarRight/SidebarRightContent.qml`
+- `modules/home/ii/modules/ii/sidebarRight/bluetoothDevices/BluetoothDialog.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/AbstractQuickPanel.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/AndroidQuickPanel.qml`
+- `modules/home/ii/modules/ii/sidebarRight/quickToggles/androidStyle/AndroidToggleDelegateChooser.qml`
+- `modules/home/ii/modules/ii/sidebarRight/volumeMixer/VolumeDialog.qml`
+- `modules/home/ii/modules/ii/sidebarRight/wifiNetworks/WifiDialog.qml`
+- `modules/home/ii/modules/ii/wallpaperSelector/WallpaperSelector.qml`
+- `modules/home/ii/modules/settings/About.qml`
+- `modules/home/ii/modules/settings/GeneralConfig.qml`
+- `modules/home/ii/panelFamilies/IllogicalImpulseFamily.qml`
+- `modules/home/ii/services/Audio.qml`
+- `modules/home/ii/services/Battery.qml`
+- `modules/home/ii/services/Brightness.qml`
+- `modules/home/ii/services/Cliphist.qml`
+- `modules/home/ii/services/DateTime.qml`
+- `modules/home/ii/services/HyprlandXkb.qml`
+- `modules/home/ii/services/LauncherSearch.qml`
+- `modules/home/ii/services/MaterialThemeLoader.qml`
+- `modules/home/ii/services/MprisController.qml`
+- `modules/home/ii/services/Notifications.qml`
+- `modules/home/ii/services/ResourceUsage.qml`
+- `modules/home/ii/services/TimerService.qml`
+- `modules/home/ii/services/TrayService.qml`
+- `modules/home/ii/services/Updates.qml`
+- `modules/home/ii/settings.qml`
+- `modules/home/ii/shell.qml`
+- `modules/home/ii/welcome.qml`
+
+## New files
+
+- `cleanup-report.md`
+- `dawnbreakos-ii-config.json`
+- `modules/home/ii/modules/settings/ControlCenterConfig.qml`
+
+## Dependencies and implementation notes
+
+- Removed II QML/service dependencies include Booru/BooruResponseData, EasyEffects, GoogleCloud, HyprlandAntiFlashbangShader, Hyprsunset, KeyringStorage, TaskbarApps, TODO, and the II Weather service.
+- Removed II UI/model dependencies include the old lock and PAM/fprintd config, dock, vertical bar, background clock, OSK, screen translator, Booru/translator sidebars, TODO widget, classic quick panel, and the unrequested Android/classic toggle delegates.
+- `Brightness.qml` remains for monitor brightness and OSD. Hyprland brightness binds now call the II brightness IPC first and retain a `brightnessctl` fallback.
+- No Nix package declarations or unrelated Nix modules were changed. The only modified Nix file is `modules/home/hyprland/binds.nix`.
+- No images, fonts, shader assets, Python scripts, virtual environments, or general-purpose scripts were deleted. The only non-QML feature-specific deletions were the OSK-only `layouts.js` and old II lock `pam/fprintd.conf`.
+
+## Validation
+
+- Reduced JSON parses successfully and its 42 leaf fields match the retained JsonAdapter schema.
+- Every remaining `Config.options` reference in II QML resolves to a field in the reduced schema.
+- All remaining `qs.modules.*` import paths resolve to existing module directories.
+- Changed QML files pass raw delimiter-balance checks; no dangling references to the removed II feature components/services were found in active II QML.
+- No backup files remain in the cleaned tree.
+- Caelestia source files and `vendor/dawnbreak-plugin` files were checksum-compared against the archive and are unchanged.
+- Runtime validation with `qs`, `qmllint`, `qmlformat`, or Nix evaluation could not be performed in this workspace because those executables are unavailable. Please run the shell once on the target machine and share any runtime log if a follow-up fix is needed.

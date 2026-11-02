@@ -84,7 +84,7 @@ AbstractOverlayWidget {
         maximumX: root.parent?.width - root.width
         maximumY: root.parent?.height - root.height
     }
-    opacity: (GlobalStates.overlayOpen || !clickthrough) ? 1.0 : Config.options.overlay.clickthroughOpacity
+    opacity: (GlobalStates.overlayOpen || !clickthrough) ? 1.0 : 0.8
 
     // Guarded states & registration funcs
     property bool open: Persistent.states.overlay.open

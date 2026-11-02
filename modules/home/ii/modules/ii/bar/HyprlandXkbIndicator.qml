@@ -5,7 +5,6 @@ import qs.modules.common.widgets
 
 Loader {
     id: root
-    property bool vertical: false
     property color color: Appearance.colors.colOnSurfaceVariant
     active: HyprlandXkb.layoutCodes.length > 1
     visible: active
@@ -18,8 +17,8 @@ Loader {
     }
 
     sourceComponent: Item {
-        implicitWidth: root.vertical ? null : layoutCodeText.implicitWidth
-        implicitHeight: root.vertical ? layoutCodeText.implicitHeight : null
+        implicitWidth: layoutCodeText.implicitWidth
+        implicitHeight: layoutCodeText.implicitHeight
 
         StyledText {
             id: layoutCodeText

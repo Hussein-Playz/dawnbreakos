@@ -21,21 +21,7 @@ Column {
     // Excellent symbol explaination and source :
     // http://xahlee.info/comp/unicode_computing_symbols.html
     // https://www.nerdfonts.com/cheat-sheet
-    property var macSymbolMap: ({
-        "Ctrl": "󰘴",
-        "Alt": "󰘵",
-        "Shift": "󰘶",
-        "Space": "󱁐",
-        "Tab": "↹",
-        "Equal": "󰇼",
-        "Minus": "",
-        "Print": "",
-        "BackSpace": "󰭜",
-        "Delete": "⌦",
-        "Return": "󰌑",
-        "Period": ".",
-        "Escape": "⎋"
-      })
+
     property var functionSymbolMap: ({
         "F1":  "󱊫",
         "F2":  "󱊬",
@@ -62,24 +48,16 @@ Column {
 
     property var keyBlacklist: ["SUPER_L", "SUPER_R"]
     property var keySubstitutions: Object.assign({
-        "Super": "",
-        "mouse_up": "Scroll ↓",    // ikr, weird
-        "mouse_down": "Scroll ↑",  // trust me bro
+        "Super": " ",
+        "mouse_up": "Scroll ↓",
+        "mouse_down": "Scroll ↑",
         "mouse:272": "LMB",
         "mouse:273": "RMB",
         "mouse:275": "MouseBack",
         "Slash": "/",
         "Hash": "#",
         "Return": "Enter",
-        // "Shift": "",
-      },
-      !!Config.options.cheatsheet.superKey ? {
-          "Super": Config.options.cheatsheet.superKey,
-      }: {},
-      Config.options.cheatsheet.useMacSymbol ? macSymbolMap : {},
-      Config.options.cheatsheet.useFnSymbol ? functionSymbolMap : {},
-      Config.options.cheatsheet.useMouseSymbol ? mouseSymbolMap : {},
-    )
+    }, functionSymbolMap, mouseSymbolMap)
 
     function modMaskToStringList(modMask: int): list<string> {
         var list = [];
@@ -181,13 +159,12 @@ Column {
                     model: {
                         const modList = root.modMaskToStringList(bindLine.keyData.modmask).map(mod => root.keySubstitutions[mod] || mod)
                         if (modList.length == 0) return []
-                        if (Config.options.cheatsheet.splitButtons) return modList;
                         return [modList.join(" ")]
                     }
                     delegate: KeyboardKey {
                         required property var modelData
                         key: root.transformKey(modelData)
-                        pixelSize: Config.options.cheatsheet.fontSize.key
+                        pixelSize: 12
                     }
                 }
                 StyledText {
@@ -201,7 +178,7 @@ Column {
                     anchors.verticalCenter: parent.verticalCenter
                     visible: !keyBlacklist.includes(bindLine.keyData.key)
                     key: root.transformKey(bindLine.keyData.key)
-                    pixelSize: Config.options.cheatsheet.fontSize.key
+                    pixelSize: 12
                     color: Appearance.colors.colOnLayer0
                 }
             }
@@ -213,7 +190,7 @@ Column {
                     id: commentText
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
-                    font.pixelSize: Config.options.cheatsheet.fontSize.comment || Appearance.font.pixelSize.smaller
+                    font.pixelSize: 12
                     text: root.transformDescription(bindLine.keyData, bindLine.categoryName)
                 }
             }

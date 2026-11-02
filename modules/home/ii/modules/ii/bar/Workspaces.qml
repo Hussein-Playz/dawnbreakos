@@ -20,7 +20,6 @@ ButtonMouseArea {
         monitor: root.monitor
     }
 
-    property bool vertical: Config.options.bar.vertical
     property bool superPressAndHeld: false // Relevant modifications at bottom of file
 
     property real workspaceButtonWidth: 26
@@ -28,17 +27,16 @@ ButtonMouseArea {
     property real activeWorkspaceSize: workspaceButtonWidth - activeWorkspaceMargin * 2
     property real workspaceIconSize: workspaceButtonWidth * 0.69
     property real workspaceIconSizeShrinked: workspaceButtonWidth * 0.55
-    property real workspaceIconOpacityShrinked: 1
     property real workspaceIconMarginShrinked: -4
     property int workspaceIndexInGroup: (monitor?.activeWorkspace?.id - 1) % wsModel.shownCount
     property real specialTextSize: workspaceButtonWidth * 0.5
 
-    Layout.alignment: vertical ? Qt.AlignHCenter : Qt.AlignVCenter
-    Layout.fillWidth: vertical
-    Layout.fillHeight: !vertical
-    readonly property real barThickness: vertical ? Appearance.sizes.verticalBarWidth : Appearance.sizes.barHeight
-    implicitWidth: vertical ? barThickness : occupiedIndicators.implicitWidth
-    implicitHeight: vertical ? occupiedIndicators.implicitHeight : barThickness
+    Layout.alignment: Qt.AlignVCenter
+    Layout.fillWidth: false
+    Layout.fillHeight: true
+    readonly property real barThickness: Appearance.sizes.barHeight
+    implicitWidth: occupiedIndicators.implicitWidth
+    implicitHeight: barThickness
 
     property real specialBlur: (wsModel.specialWorkspaceActive && !containsMouse) ? 1 : 0
     Behavior on specialBlur {
@@ -49,7 +47,7 @@ ButtonMouseArea {
     acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.BackButton
     hoverEnabled: true
     property int hoverIndex: {
-        const position = root.vertical ? mouseY : mouseX;
+        const position = mouseX;
         return Math.floor(position / root.workspaceButtonWidth);
     }
 
@@ -125,12 +123,12 @@ ButtonMouseArea {
                         property real undirectionalWidth: root.workspaceButtonWidth * wsBg.currentOccupied
                         property real undirectionalLength: root.workspaceButtonWidth * (1 + 0.5 * wsBg.previousOccupied + 0.5 * wsBg.nextOccupied) * currentOccupied
                         property real undirectionalOffset: (!wsBg.currentOccupied ? 0.5 : -0.5 * wsBg.previousOccupied) * root.workspaceButtonWidth
-                        anchors.verticalCenter: root.vertical ? undefined : parent.verticalCenter
-                        anchors.horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
-                        x: root.vertical ? 0 : undirectionalOffset
-                        y: root.vertical ? undirectionalOffset : 0
-                        implicitWidth: root.vertical ? undirectionalWidth : undirectionalLength
-                        implicitHeight: root.vertical ? undirectionalLength : undirectionalWidth
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: undefined
+                        x: undirectionalOffset
+                        y: 0
+                        implicitWidth: undirectionalLength
+                        implicitHeight: undirectionalWidth
 
                         Behavior on undirectionalWidth {
                             animation: Appearance.animation.elementMoveSmall.numberAnimation.createObject(this)
@@ -221,7 +219,7 @@ ButtonMouseArea {
 
                     AppIcon {
                         id: appIcon
-                        property real cornerMargin: (!root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons && wsApp.biggestWindow) ? (root.workspaceButtonWidth - root.workspaceIconSize) / 2 : root.workspaceIconMarginShrinked
+                        property real cornerMargin: (!root.superPressAndHeld && wsApp.biggestWindow) ? (root.workspaceButtonWidth - root.workspaceIconSize) / 2 : root.workspaceIconMarginShrinked
                         anchors {
                             bottom: parent.bottom
                             right: parent.right
@@ -257,13 +255,13 @@ ButtonMouseArea {
                             implicitWidth: appIcon.implicitWidth
                             implicitHeight: appIcon.implicitHeight
                             colorizationColor: Appearance.colors.colOnLayer0
-                            colorization: Config.options.bar.workspaces.monochromeIcons ? 0.8 : 0.5
+                            colorization: 0.8
                             brightness: 0
                             source: appIcon
 
-                            opacity: !Config.options?.bar.workspaces.showAppIcons ? 0 : (wsApp.biggestWindow && !root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? 1 : wsApp.biggestWindow ? root.workspaceIconOpacityShrinked : 0
+                            opacity: wsApp.biggestWindow ? 1 : 0
                             visible: opacity > 0
-                            scale: ((!root.superPressAndHeld && Config.options?.bar.workspaces.showAppIcons) ? root.workspaceIconSize : root.workspaceIconSizeShrinked) / root.workspaceIconSize
+                            scale: (!root.superPressAndHeld ? root.workspaceIconSize : root.workspaceIconSizeShrinked) / root.workspaceIconSize
 
                             Behavior on opacity {
                                 animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
@@ -296,19 +294,17 @@ ButtonMouseArea {
             property real undirectionalWidth: root.activeWorkspaceSize
             property real undirectionalLength: {
                 const base = root.workspaceButtonWidth * Math.min(1.35, wsModel.shownCount); // Who tf only configures only 2 workspaces shown anyway?
-                if (root.vertical)
-                    return base;
                 return specialWsText.implicitWidth + undirectionalWidth;
             }
             color: Appearance.colors.colPrimary
 
-            implicitWidth: root.vertical ? undirectionalWidth : undirectionalLength
-            implicitHeight: root.vertical ? undirectionalLength : undirectionalWidth
+            implicitWidth: undirectionalLength
+            implicitHeight: undirectionalWidth
 
             StyledText {
                 id: specialWsText
                 anchors.centerIn: parent
-                text: (!root.vertical ? wsModel.specialWorkspaceName : "S")
+                text: wsModel.specialWorkspaceName
                 color: Appearance.colors.colOnPrimary
                 font.pixelSize: root.specialTextSize
             }
@@ -322,7 +318,7 @@ ButtonMouseArea {
     /////////////////// Super key press handling ///////////////////
     Timer {
         id: superPressAndHeldTimer
-        interval: (Config?.options.bar.autoHide.showWhenPressingSuper.delay ?? 100)
+        interval: 140
         repeat: false
         onTriggered: {
             root.superPressAndHeld = true;
@@ -331,8 +327,6 @@ ButtonMouseArea {
     Connections {
         target: GlobalStates
         function onSuperDownChanged() {
-            if (!Config?.options.bar.autoHide.showWhenPressingSuper.enable)
-                return;
             if (GlobalStates.superDown)
                 superPressAndHeldTimer.restart();
             else {
@@ -347,38 +341,27 @@ ButtonMouseArea {
 
     component WorkspaceLayout: Box {
         anchors {
-            top: !root.vertical ? parent.top : undefined
-            bottom: !root.vertical ? parent.bottom : undefined
-            left: root.vertical ? parent.left : undefined
-            right: root.vertical ? parent.right : undefined
+            top: parent.top
+            bottom: parent.bottom
         }
 
         rowSpacing: 0
         columnSpacing: 0
-        vertical: root.vertical
+        vertical: false
     }
 
     component WorkspaceItem: Item {
         required property int index
         readonly property int wsId: wsModel.getWorkspaceIdAt(index)
-        implicitWidth: root.vertical ? root.barThickness : root.workspaceButtonWidth
-        implicitHeight: root.vertical ? root.workspaceButtonWidth : root.barThickness
+        implicitWidth: root.workspaceButtonWidth
+        implicitHeight: root.barThickness
     }
 
     component NumberWorkspaceItem: WorkspaceItem {
         id: wsNum
         property bool hasBiggestWindow: !!wsModel.biggestWindow[index]
-        property int wsId: wsModel.getWorkspaceIdAt(index)
         property color contentColor: (wsModel.occupied[wsNum.index] && wsId !== wsModel.fakeWorkspace) ? Appearance.colors.colOnSecondaryContainer : Appearance.colors.colOnLayer1Inactive
-        property bool showingNumbers: {
-            if (root.superPressAndHeld)
-                return true;
-            if (GlobalStates.screenLocked)
-                return false;
-            if (Config.options?.bar.workspaces.alwaysShowNumbers && (!Config.options?.bar.workspaces.showAppIcons || !wsNum.hasBiggestWindow))
-                return true;
-            return false;
-        }
+        property bool showingNumbers: root.superPressAndHeld
 
         FadeLoader {
             shown: !wsNum.showingNumbers
@@ -396,10 +379,10 @@ ButtonMouseArea {
                 anchors.centerIn: parent
                 font {
                     pixelSize: Appearance.font.pixelSize.small - ((text.length - 1) * (text !== "10") * 2)
-                    family: Config.options?.bar.workspaces.useNerdFont ? Appearance.font.family.iconNerd : defaultFont
+                    family: defaultFont
                 }
                 color: wsNum.contentColor
-                text: Config.options?.bar.workspaces.numberMap[wsNum.wsId - 1] || wsNum.wsId
+                text: wsNum.wsId
             }
         }
     }
@@ -420,8 +403,7 @@ ButtonMouseArea {
             id: indicatorRect
 
             anchors {
-                verticalCenter: root.vertical ? undefined : parent.verticalCenter
-                horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
+                verticalCenter: parent.verticalCenter
             }
 
             property real indicatorPosition: Math.min(idxPair.idx1, idxPair.idx2) * root.workspaceButtonWidth + root.activeWorkspaceMargin
@@ -432,10 +414,9 @@ ButtonMouseArea {
             radius: indicatorThickness / 2
             color: Appearance.colors.colPrimary
 
-            x: root.vertical ? null : indicatorPosition
-            y: root.vertical ? indicatorPosition : null
-            implicitWidth: root.vertical ? indicatorThickness : indicatorLength
-            implicitHeight: root.vertical ? indicatorLength : indicatorThickness
+            x: indicatorPosition
+            implicitWidth: indicatorLength
+            implicitHeight: indicatorThickness
         }
     }
 }

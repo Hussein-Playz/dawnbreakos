@@ -12,14 +12,8 @@ Item {
     required property var scopeRoot
     property int sidebarPadding: 10
     anchors.fill: parent
-    property bool translatorEnabled: Config.options.sidebar.translator.enable
-    property bool quickSearchEnabled: true
-    property bool animeEnabled: Config.options.policies.weeb !== 0
-    property bool animeCloset: Config.options.policies.weeb === 2
     property var tabButtonList: [
-        ...(root.quickSearchEnabled ? [{"icon": "search", "name": Translation.tr("Quick Search")}] : []),
-        ...(root.translatorEnabled ? [{"icon": "translate", "name": Translation.tr("Translator")}] : []),
-        ...((root.animeEnabled && !root.animeCloset) ? [{"icon": "bookmark_heart", "name": Translation.tr("Anime")}] : [])
+        { "icon": "search", "name": Translation.tr("Quick Search") }
     ]
     property int tabCount: swipeView.count
 
@@ -83,12 +77,7 @@ Item {
                     }
                 }
 
-                contentChildren: [
-                    ...(root.quickSearchEnabled ? [quickSearch.createObject()] : []),
-                    ...(root.translatorEnabled ? [translator.createObject()] : []),
-                    ...((root.tabButtonList.length === 0 || (!root.quickSearchEnabled && !root.translatorEnabled && root.animeCloset)) ? [placeholder.createObject()] : []),
-                    ...(root.animeEnabled ? [anime.createObject()] : []),
-                ]
+                contentChildren: [quickSearch.createObject()]
             }
         }
 
@@ -96,23 +85,8 @@ Item {
             id: quickSearch
             QuickSearch {}
         }
-        Component {
-            id: translator
-            Translator {}
-        }
-        Component {
-            id: anime
-            Anime {}
-        }
-        Component {
-            id: placeholder
-            Item {
-                StyledText {
-                    anchors.centerIn: parent
-                    text: root.animeCloset ? Translation.tr("Nothing") : Translation.tr("Enjoy your empty sidebar...")
-                    color: Appearance.colors.colSubtext
-                }
-            }
-        }
+
+
+
     }
 }

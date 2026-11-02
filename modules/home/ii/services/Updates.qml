@@ -16,8 +16,8 @@ Singleton {
     property alias checking: checkUpdatesProc.running
     property int count: 0
     
-    readonly property bool updateAdvised: available && count > Config.options.updates.adviseUpdateThreshold
-    readonly property bool updateStronglyAdvised: available && count > Config.options.updates.stronglyAdviseUpdateThreshold
+    readonly property bool updateAdvised: available && count > 75
+    readonly property bool updateStronglyAdvised: available && count > 200
 
     function load() {}
     function refresh() {
@@ -27,9 +27,9 @@ Singleton {
     }
 
     Timer {
-        interval: Config.options.updates.checkInterval * 60 * 1000
+        interval: 120 * 60 * 1000
         repeat: true
-        running: Config.ready && Config.options.updates.enableCheck
+        running: Config.ready
         onTriggered: {
             print("[Updates] Periodic update check due")
             root.refresh();
@@ -38,7 +38,7 @@ Singleton {
 
     Process {
         id: checkAvailabilityProc
-        running: Config.ready && Config.options.updates.enableCheck
+        running: Config.ready
         command: ["which", "checkupdates"]
         onExited: (exitCode, exitStatus) => {
             root.available = (exitCode === 0);

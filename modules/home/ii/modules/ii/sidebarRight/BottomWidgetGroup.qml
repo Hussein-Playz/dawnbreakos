@@ -3,7 +3,6 @@ import qs.modules.common
 import qs.modules.common.widgets
 import qs.services
 import qs.modules.ii.sidebarRight.calendar
-import qs.modules.ii.sidebarRight.todo
 import qs.modules.ii.sidebarRight.pomodoro
 import QtQuick
 import QtQuick.Layouts
@@ -14,7 +13,7 @@ Rectangle {
     color: Appearance.colors.colLayer1
     clip: true
     implicitHeight: collapsed ? collapsedBottomWidgetGroupRow.implicitHeight : 350
-    property int selectedTab: Persistent.states.sidebar.bottomGroup.tab
+    property int selectedTab: Math.min(Persistent.states.sidebar.bottomGroup.tab, tabs.length - 1)
     property int previousIndex: -1
     property bool collapsed: Persistent.states.sidebar.bottomGroup.collapsed
     property var tabs: [
@@ -25,18 +24,17 @@ Rectangle {
             "widget": "calendar/CalendarWidget.qml"
         },
         {
-            "type": "todo",
-            "name": Translation.tr("To Do"),
-            "icon": "done_outline",
-            "widget": "todo/TodoWidget.qml"
-        },
-        {
             "type": "timer",
             "name": Translation.tr("Timer"),
             "icon": "schedule",
             "widget": "pomodoro/PomodoroWidget.qml"
         },
     ]
+
+    Component.onCompleted: {
+        if (Persistent.states.sidebar.bottomGroup.tab >= root.tabs.length)
+            Persistent.states.sidebar.bottomGroup.tab = root.tabs.length - 1;
+    }
 
     Behavior on implicitHeight {
         NumberAnimation {
@@ -111,11 +109,9 @@ Rectangle {
         }
 
         StyledText {
-            property int remainingTasks: Todo.list.filter(task => !task.done).length
             Layout.margins: 10
             Layout.leftMargin: 0
-            // text: `${DateTime.collapsedCalendarFormat}   •   ${remainingTasks} task${remainingTasks > 1 ? "s" : ""}`
-            text: Translation.tr("%1   •   %2 tasks").arg(DateTime.collapsedCalendarFormat).arg(remainingTasks)
+            text: DateTime.collapsedCalendarFormat
             font.pixelSize: Appearance.font.pixelSize.large
             color: Appearance.colors.colOnLayer1
         }
@@ -206,9 +202,9 @@ Rectangle {
                 Connections {
                     target: root
                     function onSelectedTabChanged() {
-                        if (root.currentTab > root.previousIndex)
+                        if (root.selectedTab > root.previousIndex)
                             tabSwitchBehavior.animation.down = true;
-                        else if (root.currentTab < root.previousIndex)
+                        else if (root.selectedTab < root.previousIndex)
                             tabSwitchBehavior.animation.down = false;
                         tabStack.source = root.tabs[root.selectedTab].widget;
                     }

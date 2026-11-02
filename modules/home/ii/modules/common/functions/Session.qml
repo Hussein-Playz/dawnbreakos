@@ -13,7 +13,7 @@ Singleton {
     }
 
     function changePassword() {
-        Quickshell.execDetached(["bash", "-c", `${Config.options.apps.changePassword}`]);
+        Quickshell.execDetached(["bash", "-c", `${"kitty -1 --hold=yes fish -i -c 'passwd'"}`]);
     }
 
     function lock() {
@@ -30,7 +30,7 @@ Singleton {
     }
 
     function launchTaskManager() {
-        Quickshell.execDetached(["bash", "-c", `${Config.options.apps.taskManager}`]);
+        Quickshell.execDetached(["bash", "-c", `${"plasma-systemmonitor --page-name Processes"}`]);
     }
 
     function hibernate() {

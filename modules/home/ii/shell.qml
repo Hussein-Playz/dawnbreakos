@@ -11,15 +11,14 @@ import "services"
 import "panelFamilies"
 import "caelestia"
 import "caelestia/modules/lock" as CaelestiaLock
-
-import QtQuick
 import QtQuick.Window
-import Quickshell
-import Quickshell.Io
 import Quickshell.Hyprland
 
+import QtQuick
+import Quickshell
+import Quickshell.Io
+
 ShellRoot {
-    id: root
 
     // Stuff for every panel family
     ReloadPopup {}
@@ -39,7 +38,6 @@ ShellRoot {
 
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
-        // Hyprsunset.load()
         FirstRunExperience.load()
         ConflictKiller.load()
         Cliphist.refresh()
@@ -48,40 +46,10 @@ ShellRoot {
     }
 
 
-    // Panel families
-    property list<string> families: ["ii"]
-    function cyclePanelFamily() {
-        const currentIndex = families.indexOf(Config.options.panelFamily)
-        const nextIndex = (currentIndex + 1) % families.length
-        Config.options.panelFamily = families[nextIndex]
-    }
-
-    component PanelFamilyLoader: LazyLoader {
-        required property string identifier
-        property bool extraCondition: true
-        active: Config.ready && Config.options.panelFamily === identifier && extraCondition
-    }
-    
-    PanelFamilyLoader {
-        identifier: "ii"
+    // II is the only active panel family.
+    LazyLoader {
+        active: Config.ready
         component: IllogicalImpulseFamily {}
     }
 
-
-    // Shortcuts
-    IpcHandler {
-        target: "panelFamily"
-
-        function cycle(): void {
-            root.cyclePanelFamily()
-        }
-    }
-
-    GlobalShortcut {
-        name: "panelFamilyCycle"
-        description: "Cycles panel family"
-
-        onPressed: root.cyclePanelFamily()
-    }
 }
-

@@ -12,7 +12,7 @@ Rectangle {
 
     property color colBackground: Qt.alpha("#88111111", 0.9)
     property color colForeground: "#ddffffff"
-    property bool showLabel: Config.options.regionSelector.targetRegions.showLabel
+    property bool showLabel: false
     property bool showIcon: false
     property bool targeted: false
     property color borderColor

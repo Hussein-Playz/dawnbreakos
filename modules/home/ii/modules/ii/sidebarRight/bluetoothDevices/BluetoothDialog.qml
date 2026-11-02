@@ -60,7 +60,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("Details")
             onClicked: {
-                Quickshell.execDetached(["bash", "-c", `${Config.options.apps.bluetooth}`]);
+                Quickshell.execDetached(["bash", "-c", "kcmshell6 kcm_bluetooth"]);
                 GlobalStates.sidebarRightOpen = false;
             }
         }

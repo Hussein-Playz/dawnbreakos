@@ -14,10 +14,10 @@ import QtQuick
 Singleton {
     id: root
 
-    property int focusTime: Config.options.time.pomodoro.focus
-    property int breakTime: Config.options.time.pomodoro.breakTime
-    property int longBreakTime: Config.options.time.pomodoro.longBreak
-    property int cyclesBeforeLongBreak: Config.options.time.pomodoro.cyclesBeforeLongBreak
+    property int focusTime: 1500
+    property int breakTime: 300
+    property int longBreakTime: 900
+    property int cyclesBeforeLongBreak: 4
 
     property bool pomodoroRunning: Persistent.states.timer.pomodoro.running
     property bool pomodoroBreak: Persistent.states.timer.pomodoro.isBreak
@@ -64,7 +64,7 @@ Singleton {
             }
 
             Quickshell.execDetached(["notify-send", "Pomodoro", notificationMessage, "-a", "Shell"]);
-            if (Config.options.sounds.pomodoro) {
+            if (false) {
                 Audio.playSystemSound("alarm-clock-elapsed")
             }
 

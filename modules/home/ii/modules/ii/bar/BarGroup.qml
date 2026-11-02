@@ -5,54 +5,35 @@ import QtQuick.Layouts
 Item {
     id: root
 
-    property bool vertical: false
     property bool drawBackground: true
     property real padding: 5
-
-    implicitWidth: vertical
-    ? Appearance.sizes.baseVerticalBarWidth
-    : (gridLayout.implicitWidth + padding * 2)
-
-    implicitHeight: vertical
-    ? (gridLayout.implicitHeight + padding * 2)
-    : Appearance.sizes.baseBarHeight
-
+    implicitWidth: gridLayout.implicitWidth + padding * 2
+    implicitHeight: Appearance.sizes.baseBarHeight
     default property alias items: gridLayout.children
 
-        Rectangle {
-            id: background
-            visible: root.drawBackground
-
-            anchors {
-                fill: parent
-                topMargin: root.vertical ? 0 : 4
-                bottomMargin: root.vertical ? 0 : 4
-                leftMargin: root.vertical ? 4 : 0
-                rightMargin: root.vertical ? 4 : 0
-            }
-
-            color: Appearance.colors.colLayer0
-            radius: Appearance.rounding.full
-            border.width: 1
-            border.color: Appearance.colors.colLayer0Border
+    Rectangle {
+        anchors {
+            fill: parent
+            topMargin: 4
+            bottomMargin: 4
         }
+        visible: root.drawBackground
+        color: Appearance.colors.colLayer0
+        radius: Appearance.rounding.full
+        border.width: 1
+        border.color: Appearance.colors.colLayer0Border
+    }
 
-        GridLayout {
-            id: gridLayout
-
-            columns: root.vertical ? 1 : -1
-
-            anchors {
-                verticalCenter: root.vertical ? undefined : parent.verticalCenter
-                horizontalCenter: root.vertical ? parent.horizontalCenter : undefined
-                left: root.vertical ? undefined : parent.left
-                right: root.vertical ? undefined : parent.right
-                top: root.vertical ? parent.top : undefined
-                bottom: root.vertical ? parent.bottom : undefined
-                margins: root.padding
-            }
-
-            columnSpacing: 4
-            rowSpacing: 12
+    GridLayout {
+        id: gridLayout
+        columns: -1
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: parent.left
+            right: parent.right
+            margins: root.padding
         }
+        columnSpacing: 4
+        rowSpacing: 12
+    }
 }

@@ -13,7 +13,7 @@ StyledOverlayWidget {
     resizable: false
     clickthrough: true
 
-    property string imageSource: Config.options.overlay.floatingImage.imageSource
+    property string imageSource: "https://media.tenor.com/H5U5bJzj3oAAAAAi/kukuru.gif"
     property real scaleFactor: Config.options.overlay.floatingImage.scale
     property int imageWidth: 0
     property int imageHeight: 0

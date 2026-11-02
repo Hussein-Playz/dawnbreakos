@@ -24,9 +24,9 @@ ApplicationWindow {
     property bool showNextTime: false
     property var pages: [
         {
-            name: Translation.tr("Quick"),
+            name: Translation.tr("Control Center"),
             icon: "instant_mix",
-            component: "modules/settings/QuickConfig.qml"
+            component: "modules/settings/ControlCenterConfig.qml"
         },
         {
             name: Translation.tr("General"),
@@ -34,30 +34,9 @@ ApplicationWindow {
             component: "modules/settings/GeneralConfig.qml"
         },
         {
-            name: Translation.tr("Bar"),
-            icon: "toast",
-            iconRotation: 180,
-            component: "modules/settings/BarConfig.qml"
-        },
-        {
-            name: Translation.tr("Background"),
-            icon: "texture",
-            component: "modules/settings/BackgroundConfig.qml"
-        },
-        {
-            name: Translation.tr("Interface"),
-            icon: "bottom_app_bar",
-            component: "modules/settings/InterfaceConfig.qml"
-        },
-        {
             name: Translation.tr("Services"),
             icon: "settings",
             component: "modules/settings/ServicesConfig.qml"
-        },
-        {
-            name: Translation.tr("Advanced"),
-            icon: "construction",
-            component: "modules/settings/AdvancedConfig.qml"
         },
         {
             name: Translation.tr("About"),
@@ -69,7 +48,7 @@ ApplicationWindow {
 
     visible: true
     onClosing: Qt.quit()
-    title: "illogical-impulse Settings"
+    title: "DawnbreakOS Settings"
 
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
@@ -110,18 +89,17 @@ ApplicationWindow {
         }
 
         Item { // Titlebar
-            visible: Config.options?.windows.showTitlebar
+            visible: true
             Layout.fillWidth: true
             Layout.fillHeight: false
             implicitHeight: Math.max(titleText.implicitHeight, windowControlsRow.implicitHeight)
             StyledText {
                 id: titleText
                 anchors {
-                    left: Config.options.windows.centerTitle ? undefined : parent.left
-                    horizontalCenter: Config.options.windows.centerTitle ? parent.horizontalCenter : undefined
+                    left: undefined
+                    horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
-                    leftMargin: 12
-                }
+                    }
                 color: Appearance.colors.colOnLayer0
                 text: Translation.tr("Settings")
                 font {
@@ -182,10 +160,10 @@ ApplicationWindow {
                         buttonText: justCopied ? Translation.tr("Path copied") : Translation.tr("Config file")
                         expanded: navRail.expanded
                         downAction: () => {
-                            Qt.openUrlExternally(`${Directories.config}/illogical-impulse/config.json`);
+                            Qt.openUrlExternally(Directories.shellConfigPath);
                         }
                         altAction: () => {
-                            Quickshell.clipboardText = CF.FileUtils.trimFileProtocol(`${Directories.config}/illogical-impulse/config.json`);
+                            Quickshell.clipboardText = CF.FileUtils.trimFileProtocol(Directories.shellConfigPath);
                             fab.justCopied = true;
                             revertTextTimer.restart()
                         }

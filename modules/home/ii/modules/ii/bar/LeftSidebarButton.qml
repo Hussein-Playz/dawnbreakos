@@ -1,17 +1,10 @@
 import QtQuick
 import qs
-import qs.services
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.services
 
 RippleButton {
-    id: root
-
-    property bool showPing: false
-
-    property bool translatorEnabled: Config.options.sidebar.translator.enable
-    property bool animeEnabled: Config.options.policies.weeb !== 0
-    visible: translatorEnabled || animeEnabled
 
     property real buttonPadding: 5
     implicitWidth: distroIcon.width + buttonPadding * 2
@@ -29,47 +22,19 @@ RippleButton {
     }
 
 
-    Connections {
-        target: Booru
-        function onResponseFinished() {
-            if (GlobalStates.sidebarLeftOpen) return;
-            root.showPing = true;
-        }
-    }
 
-    Connections {
-        target: GlobalStates
-        function onSidebarLeftOpenChanged() {
-            root.showPing = false;
-        }
-    }
+
+
 
     CustomIcon {
         id: distroIcon
         anchors.centerIn: parent
         width: 19.5
         height: 19.5
-        source: Config.options.bar.topLeftIcon == 'distro' ? SystemInfo.distroIcon : `${Config.options.bar.topLeftIcon}-symbolic`
+        source: "spark-symbolic"
         colorize: true
         color: Appearance.colors.colOnLayer0
 
-        Rectangle {
-            opacity: root.showPing ? 1 : 0
-            visible: opacity > 0
-            anchors {
-                bottom: parent.bottom
-                right: parent.right
-                bottomMargin: -2
-                rightMargin: -2
-            }
-            implicitWidth: 8
-            implicitHeight: 8
-            radius: Appearance.rounding.full
-            color: Appearance.colors.colTertiary
 
-            Behavior on opacity {
-                animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
-            }
-        }
     }
 }

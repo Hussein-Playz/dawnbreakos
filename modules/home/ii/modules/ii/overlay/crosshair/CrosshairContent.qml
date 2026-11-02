@@ -99,7 +99,7 @@ Item {
     }
 
     // Update values from code
-    property var code: Config.options.crosshair.code
+    property var code: "0;P;d;1;0l;10;0o;2;1b;0"
     Component.onCompleted: reloadFromCode();
     onCodeChanged: reloadFromCode();
     function reloadFromCode() {

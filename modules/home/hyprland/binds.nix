@@ -30,10 +30,6 @@ in {
       --hl.bind(modifier .. " + D",
       --  hl.dsp.exec_cmd(qsIsAlive .. " || pkill fuzzel || fuzzel"))
 
-      hl.bind(modifier .. " + CTRL + D",
-        hl.dsp.exec_cmd("dock"),
-        { description = "Quickshell: Toggle Dock" })
-
       hl.bind(modifier .. " + TAB",
         hl.dsp.exec_cmd("qs ipc -c overview call overview toggle"),
         { description = "Quickshell: Overview" })
@@ -473,11 +469,11 @@ in {
       --##! Brightness
 
       hl.bind("XF86MonBrightnessDown",
-        hl.dsp.exec_cmd("brightnessctl set 5%-"),
+        hl.dsp.exec_cmd("qs -c ii ipc call brightness decrement || brightnessctl set 5%-"),
         { description = "Brightness: Down" })
 
       hl.bind("XF86MonBrightnessUp",
-        hl.dsp.exec_cmd("brightnessctl set +5%"),
+        hl.dsp.exec_cmd("qs -c ii ipc call brightness increment || brightnessctl set +5%"),
         { description = "Brightness: Up" })
 
 

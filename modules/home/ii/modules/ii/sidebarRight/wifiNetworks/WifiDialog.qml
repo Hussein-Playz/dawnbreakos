@@ -50,7 +50,7 @@ WindowDialog {
         DialogButton {
             buttonText: Translation.tr("Details")
             onClicked: {
-                Quickshell.execDetached(["bash", "-c", `${Network.ethernet ? Config.options.apps.networkEthernet : Config.options.apps.network}`]);
+                Quickshell.execDetached(["bash", "-c", "kcmshell6 kcm_networkmanagement"]);
                 GlobalStates.sidebarRightOpen = false;
             }
         }
