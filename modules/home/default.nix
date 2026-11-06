@@ -49,6 +49,7 @@ in {
       ./zsh
       ./vencord.nix
       ./fuzzel.nix
+      ./face.nix
     ]
     ++ (
       if helixEnable

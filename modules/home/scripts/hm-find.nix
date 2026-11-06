@@ -27,6 +27,7 @@ pkgs.writeShellScriptBin "hm-find" ''
   TIME_RANGE="30m"
   LOG_DIR="$HOME/hm-logs"
   LOG_FILE="$LOG_DIR/hm-cleanup-$(date +'%Y-%m-%d_%H-%M-%S').log"
+  confirm="y"
 
   # Ensure the log directory exists
   if [ ! -d "$LOG_DIR" ]; then
@@ -48,13 +49,14 @@ pkgs.writeShellScriptBin "hm-find" ''
   echo "$FILES" | tr ' ' '\n'
 
   # Ask for user confirmation before deletion
-  read -p "❓ Do you want to remove these files? (y/N): " confirm
-
+  #read -p "❓ Do you want to remove these files? (y/N): " confirm
   if [[ "$confirm" == "y" || "$confirm" == "Y" ]]; then
       echo "🗑️ Deleting files..." | tee -a "$LOG_FILE"
       echo "$FILES" | xargs rm -v | tee -a "$LOG_FILE"
       echo "✅ Cleanup completed at $(date)" | tee -a "$LOG_FILE"
+      clear
   else
       echo "⛔ No files were removed." | tee -a "$LOG_FILE"
+      clear
   fi
 ''

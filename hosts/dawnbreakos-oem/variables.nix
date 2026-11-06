@@ -116,6 +116,9 @@
   amdgpuID = "PCI:5:0:0";
   nvidiaID = "PCI:2@0:0:0";
 
+  enableNFS = false;
+  printEnable = false;
+
   # Themes and animation.
   # Only uncomment your selection
   # The others much be commented out.

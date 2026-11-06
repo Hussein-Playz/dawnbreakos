@@ -5,6 +5,7 @@
 }: {
   environment.systemPackages = with pkgs; [
     # Normal Usuage
+    foliate
     qbittorrent
     kdePackages.kate
     kdePackages.konsole
@@ -34,8 +35,7 @@
     icu
     tree
     nss
-    aircrack-ng
-    seclists
+#     aircrack-ng
   ];
   programs.nix-ld = {
   enable = true;
