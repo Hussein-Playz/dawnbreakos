@@ -91,7 +91,7 @@ in {
       qt6.qtpositioning
       kdePackages.kirigami
       pamixer
-      python313Packages.kde-material-you-colors
+      kde-material-you-colors
       libsecret
       rubyPackages.glib2
       xdg-user-dirs

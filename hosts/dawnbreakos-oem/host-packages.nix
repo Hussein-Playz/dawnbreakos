@@ -19,18 +19,18 @@
     # Development
     jdk17
     vscode
-    (pkgs.unityhub.override {
-      extraLibs = pkgs: with pkgs; [
-        sqlite
-        openssl
-      ];
-    })
+    #(pkgs.unityhub.override {
+    #  extraLibs = pkgs: with pkgs; [
+    #    sqlite
+    #    openssl
+    #  ];
+    #})
     jetbrains.pycharm
-    jetbrains.idea
+    #jetbrains.idea
     #figma-linux
     # Gaming
     #protonup-qt
-    protontricks
+    #protontricks
     # Uncategorized
     icu
     tree
