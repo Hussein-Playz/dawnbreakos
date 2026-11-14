@@ -8,6 +8,7 @@
 in {
   home.packages = [
     (pkgs.callPackage ./ii/scripts/search/dawn-search.nix {})
+    (pkgs.callPackage ./ii/scripts/dawnbreak-shell-cli.nix {})
   ];
 
   home.activation.quickshellIi = lib.hm.dag.entryAfter ["writeBoundary"] ''

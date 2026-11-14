@@ -30,12 +30,16 @@ Searcher {
     }
 
     function setRandom(): void {
-        Quickshell.execDetached(["caelestia", "wallpaper", "-r", ...smartArg]);
+        const entries = wallpapers.entries;
+        if (!entries.length)
+            return;
+        const entry = entries[Math.floor(Math.random() * entries.length)];
+        setWallpaper(entry.path);
     }
 
     function setWallpaper(path: string): void {
         actualCurrent = path;
-        Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...smartArg]);
+        Quickshell.execDetached(["dawnbreak-shell-cli", "wallpaper", "-f", path, ...smartArg]);
     }
 
     function preview(path: string): void {
@@ -91,7 +95,7 @@ Searcher {
             let wall = text().trim();
             if (!wall) {
                 wall = root.fallback;
-                Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...root.smartArg]);
+                Quickshell.execDetached(["dawnbreak-shell-cli", "wallpaper", "-f", root.fallback, ...root.smartArg]);
             }
             root.actualCurrent = wall;
             root.previewColourLock = false;
@@ -99,7 +103,7 @@ Searcher {
         onLoadFailed: {
             root.actualCurrent = root.fallback;
             root.previewColourLock = false;
-            Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...root.smartArg]);
+            Quickshell.execDetached(["dawnbreak-shell-cli", "wallpaper", "-f", root.fallback, ...root.smartArg]);
         }
     }
 
@@ -114,7 +118,7 @@ Searcher {
     Process {
         id: getPreviewColoursProc
 
-        command: ["caelestia", "wallpaper", "-p", root.previewPath, ...root.smartArg]
+        command: ["dawnbreak-shell-cli", "wallpaper", "-p", root.previewPath, ...root.smartArg]
         stdout: StdioCollector {
             onStreamFinished: {
                 Colours.load(text, true);

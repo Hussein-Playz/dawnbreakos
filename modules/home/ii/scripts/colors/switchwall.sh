@@ -274,6 +274,17 @@ switch() {
 
     pre_process "$mode_flag"
 
+    # Generate the Caelestia-derived native Material You palette independently
+    # of Matugen. Colours.qml watches ~/.local/state/dawnbreak/scheme.json.
+    if [[ -n "$imgpath" && -f "$imgpath" ]]; then
+        palette_args=(wallpaper generate --image "$imgpath")
+        [[ "$mode_flag" == "dark" || "$mode_flag" == "light" ]] && palette_args+=(--mode "$mode_flag")
+        [[ "${DAWNBREAK_NO_SMART_SCHEME:-0}" == "1" ]] && palette_args+=(--no-smart)
+        if ! dawnbreak-shell-cli "${palette_args[@]}"; then
+            echo "[switchwall.sh] Warning: Dawnbreak shell palette generation failed" >&2
+        fi
+    fi
+
     # Check if app and shell theming is enabled in config
     if [ -f "$SHELL_CONFIG_FILE" ]; then
         enable_apps_shell=$(jq -r '.appearance.wallpaperTheming.enableAppsAndShell' "$SHELL_CONFIG_FILE")

@@ -3,12 +3,12 @@
   environment.systemPackages = with pkgs; [
   ];
   # Add host specific flatpaks here
-  services = {
-    flatpak = {
-      packages = [
-      ];
-    };
-  };
+#   services = {
+#     flatpak = {
+#       packages = [
+#       ];
+#     };
+#   };
   services.auto-cpufreq.enable = false;
   services.auto-cpufreq.settings = {
     battery = {

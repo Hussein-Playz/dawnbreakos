@@ -33,7 +33,6 @@ in {
   environment.systemPackages = with pkgs; [
       gpu-screen-recorder
       alejandra # nix formatter
-      amfora # Fancy Terminal Browser For Gemini Protocol
       appimage-run # Needed For AppImage Support
       brightnessctl # For Screen Brightness Control
       cliamp # terminal music player
@@ -84,6 +83,7 @@ in {
       wget # Tool For Fetching Files With Links
       ytmdl # Tool For Downloading Audio From YouTube
       python3 # Python 3 programming language
+      inputs.zen-browser.packages."${pkgs.system}".default
       netwatch
       syswatch
       diskwatch

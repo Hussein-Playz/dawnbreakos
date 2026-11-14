@@ -9,6 +9,7 @@
     qbittorrent
     kdePackages.kate
     kdePackages.konsole
+    obsidian
     zapzap
     (discord.override {
       withVencord = true;
@@ -16,6 +17,7 @@
     libreoffice-qt
     hunspell
     gnome-system-monitor
+    cloudflare-warp
     # Development
     jdk17
     vscode
@@ -45,13 +47,13 @@
   };
 
   # Add host specific flatpaks here
-  services = {
-    flatpak = {
-      packages = [
-        #"com.rtosta.zapzap"
-      ];
-    };
-  };
+#   services = {
+#     flatpak = {
+#       packages = [
+#         #"com.rtosta.zapzap"
+#       ];
+#     };
+#   };
 #   services.auto-cpufreq.enable = false;
 #   services.auto-cpufreq.settings = {
 #     battery = {

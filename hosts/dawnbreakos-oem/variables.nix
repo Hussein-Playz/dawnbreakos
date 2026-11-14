@@ -30,7 +30,7 @@
   # You need to install it by adding it to the `packages.nix`
   # or as a flatpak
   #browser = "brave";
-  browser = "app.zen_browser.zen";
+  browser = "zen-beta";
   
 
   # Host-level default applications (picked up by Home Manager xdg.mimeApps)
@@ -126,7 +126,7 @@
   # Set Stylix Image
   # This will set your color palette
   # Add new images to ~/dawnbreakos/wallpapers
-  stylixImage = ../../wallpapers/LavisMoonOsuBackground.png;
+  stylixImage = ../../wallpapers/Dazai-kun.png;
 
   # Set Animation style
   # Available options are:

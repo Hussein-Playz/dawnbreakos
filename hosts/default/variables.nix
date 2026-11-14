@@ -129,7 +129,7 @@
   # Set Stylix Image
   # This will set your color palette
   # Add new images to ~/dawnbreakos/wallpapers
-  stylixImage = ../../wallpapers/LavisMoonOsuBackground.png;
+  stylixImage = ../../wallpapers/Dazai-kun.png;
 
   # Set Animation style
   # Available options are:

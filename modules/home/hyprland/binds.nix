@@ -102,10 +102,6 @@ in {
         hl.dsp.global("quickshell:wallpaperSelectorToggle"),
         { description = "Quickshell: Wallpaper Selector" })
 
-      hl.bind("SHIFT + SUPER + ALT + slash",
-        hl.dsp.exec_cmd("qs -p $HOME/.config/quickshell/ii/welcome.qml"),
-        { description = "Quickshell: End-4 Welcome" })
-
       hl.bind(modifier .. " + CTRL + ALT + T",
         hl.dsp.global("quickshell:wallpaperSelectorRandom"),
         { description = "Quickshell: Random Wallpaper" })
@@ -126,7 +122,7 @@ in {
         { description = "Apps: Discord" })
 
       hl.bind(modifier .. " + W",
-        hl.dsp.exec_cmd("app.zen_browser.zen"),
+        hl.dsp.exec_cmd("zen-beta"),
         { description = "Apps: Web Browser" })
 
       hl.bind(modifier .. " + E",

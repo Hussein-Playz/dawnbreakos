@@ -6,7 +6,6 @@
   ...
 }: let
   vars = import ../../../hosts/${host}/variables.nix;
-  extraMonitorSettings = vars.extraMonitorSettings or "";
   keyboardLayout = vars.keyboardLayout or "us";
   keyboardVariant = vars.keyboardVariant or "";
   stylixImage = vars.stylixImage or null;
@@ -146,9 +145,12 @@ in {
                 enable_swallow = false,
                 initial_workspace_tracking = 0,
                 key_press_enables_dpms = true,
-                layers_hog_keyboard_focus = true,
+                --layers_hog_keyboard_focus = true,
                 mouse_move_enables_dpms = true,
                 vrr = 0,
+            },
+            layers = {
+              layers_hog_keyboard_focus = true,
             },
             render = {
                 cm_auto_hdr = 0,
@@ -201,7 +203,7 @@ in {
                 preserve_split = true,
                 smart_resizing = true,
                 smart_split = false,
-                special_scale_factor = 0.800000,
+                --special_scale_factor = 0.800000,
                 split_bias = 0,
                 use_active_for_splits = true,
             },

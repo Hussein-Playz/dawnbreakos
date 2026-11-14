@@ -14,8 +14,9 @@
     };
     nvf.url = "github:notashelf/nvf";
     stylix.url = "github:danth/stylix/master";
-    nix-flatpak.url = "github:gmodena/nix-flatpak?ref=latest";
+    #nix-flatpak.url = "github:gmodena/nix-flatpak?ref=latest";
     millennium.url = "github:SteamClientHomebrew/Millennium?dir=packages/nix";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
     # Checking nixvim to see if it's better
     nixvim = {
       url = "github:nix-community/nixvim";
@@ -35,7 +36,7 @@
     nixpkgs,
     home-manager,
     nixvim,
-    nix-flatpak,
+    #nix-flatpak,
     alejandra,
     ...
   } @ inputs: let
@@ -59,7 +60,7 @@
         modules = [
           ./modules/core/overlays.nix
           ./profiles/${gpuProfile}
-          nix-flatpak.nixosModules.nix-flatpak
+          #nix-flatpak.nixosModules.nix-flatpak
 
           {
             home-manager.extraSpecialArgs = {

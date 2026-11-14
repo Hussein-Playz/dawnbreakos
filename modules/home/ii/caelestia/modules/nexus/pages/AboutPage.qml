@@ -35,14 +35,13 @@ PageBase {
             }
         }
 
-        // Parsed from the caelestia CLI's package listing; the sh wrapper avoids a
-        // warning when the (optional) CLI isn't installed
+        // Parsed from Dawnbreak's local shell CLI version output.
         Process {
             running: true
-            command: ["sh", "-c", "caelestia --version 2>/dev/null"]
+            command: ["sh", "-c", "dawnbreak-shell-cli --version 2>/dev/null"]
             stdout: StdioCollector {
                 onStreamFinished: {
-                    const m = text.match(/caelestia-cli\S*\s+(\d+(?:\.\d+)*)/);
+                    const m = text.match(/dawnbreak-shell-cli\s+(\d+(?:\.\d+)*)/);
                     root.cliVersion = m ? m[1] : "";
                 }
             }
